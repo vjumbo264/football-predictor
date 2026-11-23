@@ -52,8 +52,8 @@
     {
       "id": "B7",
       "title": "Ensemble",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Validation-only simplex learner and frozen-weights application implemented; learned historical weights and comparisons await authorized validation data."
     },
     {
       "id": "B8",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:11:56Z",
-  "last_session_note": "Walk-forward and 21-variant grid/cache implemented; synthetic integration exercised in CI, but real validation and committed hyperparameter freeze require authorized data."
+  "last_updated": "2026-11-23T17:12:15Z",
+  "last_session_note": "Validation-only simplex learner and frozen-weights application implemented; learned historical weights and comparisons await authorized validation data."
 }
