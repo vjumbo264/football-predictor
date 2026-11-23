@@ -1,0 +1,104 @@
+{
+  "project": "football-predictor",
+  "repo": "vjumbo264/football-predictor",
+  "goal": "Phase 1 historical walk-forward Backtest Lab",
+  "status": "in_progress",
+  "current_phase": "1",
+  "phases": [
+    {
+      "id": "1",
+      "name": "Backtest Lab",
+      "status": "in_progress",
+      "notes": ""
+    }
+  ],
+  "queue": [
+    {
+      "id": "B1",
+      "title": "Repo scaffold and CI",
+      "status": "in_progress",
+      "notes": "Public repository created; scaffold precedes real code."
+    },
+    {
+      "id": "B2",
+      "title": "Data ingestion",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B3",
+      "title": "Metrics and baselines",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B4",
+      "title": "Poisson and Dixon–Coles",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B5",
+      "title": "Elo and form",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B6",
+      "title": "Walk-forward engine",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B7",
+      "title": "Ensemble",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B8",
+      "title": "Official test",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B9",
+      "title": "Betting simulation",
+      "status": "pending",
+      "notes": ""
+    },
+    {
+      "id": "B10",
+      "title": "Report and release",
+      "status": "pending",
+      "notes": ""
+    }
+  ],
+  "decisions": [
+    "No host front-end: this environment does not require one. Section 6 placeholder requirement is subordinate to the hard rule.",
+    "BUILD_PROMPT.md records a credential-free summary rather than storing the raw prompt."
+  ],
+  "known_issues": [],
+  "deployment": {
+    "urls": [],
+    "release_tag": "",
+    "secrets_expected": [
+      "GITHUB_TOKEN (built in)"
+    ]
+  },
+  "completed": [],
+  "next_steps": [
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "B8",
+    "B9",
+    "B10"
+  ],
+  "last_updated": "2026-11-23T17:05:49Z",
+  "last_session_note": "Public repository created; scaffold precedes real code."
+}
