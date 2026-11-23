@@ -40,8 +40,8 @@
     {
       "id": "B5",
       "title": "Elo and form",
-      "status": "pending",
-      "notes": ""
+      "status": "in_progress",
+      "notes": "Elo pre-result Davidson/market mappings and date-batched rating updates plus venue-split goal form implemented; awaiting Actions verification."
     },
     {
       "id": "B6",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:10:35Z",
-  "last_session_note": "Action 45224503537 passed score-matrix identities, synthetic recovery, and same-day/future leakage for both variants."
+  "last_updated": "2026-11-23T17:10:37Z",
+  "last_session_note": "Elo pre-result Davidson/market mappings and date-batched rating updates plus venue-split goal form implemented; awaiting Actions verification."
 }
