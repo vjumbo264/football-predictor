@@ -127,10 +127,8 @@ def quality_markdown(audits):
     for a in audits:
         lines.append('| ' + ' | '.join(str(a[k]) for k in ('league','season','matches','expected_full_season','teams','duplicates_removed')) + f' | {len(a["rejected"])} |')
     for a in audits:
-        lines.extend(['', f'## {a["league"]} {a["season"]}', '', f'- SHA-256: `{a["sha256"]}`',
-                      f'- Date gaps over 14 days: {a["gaps_over_14_days"] or "none"}',
-                      f'- Rejected lines: {a["rejected"] or "none"}',
-                      f'- Suspicious names: {a["suspicious_names"] or "none by format check"}',
-                      '- Source spellings requiring manual review if unexpected: ' + repr(a['name_map']),
-                      '- Missing odds by column: ' + ', '.join(f'{k}: {v:.1%}' for k,v in a['missing_odds'].items() if v is not None)])
+        lines.extend(["", f"## {a['league']} {a['season']}", "",
+                      f"- Date gaps over 14 days: {len(a['gaps_over_14_days'])}",
+                      f"- Suspicious names by format check: {len(a['suspicious_names'])}",
+                      "- Missing odds by column: " + ", ".join(f"{k}: {v:.1%}" for k,v in a["missing_odds"].items() if v is not None)])
     return '\n'.join(lines) + '\n'
