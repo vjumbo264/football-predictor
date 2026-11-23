@@ -71,7 +71,7 @@
       "id": "B10",
       "title": "Report and release",
       "status": "blocked",
-      "notes": "Report generator and staged runner implemented; still requires authorized input, a committed freeze, an official run and a verified Release."
+      "notes": "Manual workflow, report and release path pushed. Synthetic smoke can run; no historical freeze, result or release until rights and inputs are verified."
     }
   ],
   "decisions": [
@@ -80,7 +80,10 @@
     "Use authorized immutable CSV snapshots only; no public cache until permission verified.",
     "Burn-in 2020/21–2022/23; validation 2023/24; held-out 2024/25–2025/26; optional current 2026/27."
   ],
-  "known_issues": [],
+  "known_issues": [
+    "No verified permission to publish the raw odds snapshot; do not mark the phase complete based on synthetic tests.",
+    "First committed build brief is a redacted summary, not a verbatim transcript."
+  ],
   "deployment": {
     "urls": [],
     "release_tag": "",
@@ -102,6 +105,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:14:19Z",
-  "last_session_note": "Report generator and staged runner implemented; still requires authorized input, a committed freeze, an official run and a verified Release."
+  "last_updated": "2026-11-23T17:15:05Z",
+  "last_session_note": "Manual workflow, report and release path pushed. Synthetic smoke can run; no historical freeze, result or release until rights and inputs are verified."
 }
