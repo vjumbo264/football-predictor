@@ -116,7 +116,7 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:46:28Z",
+  "last_updated": "2026-11-23T17:49:32Z",
   "last_session_note": "Backtest Lab smoke run 45225733575 passed 28 tests in 34 seconds total; no historical backtest or release. Resume at B2 once authorized prices and results are available.",
   "verification": {
     "ci_run": 45225733714,
@@ -132,18 +132,21 @@
         "title": "Runtime ingestion and raw-data audit",
         "status": "done",
         "ingestion_run": 45231092060,
-        "ci_run": 45231091058,
+        "ci_run": 45231159120,
         "matches": 7230
       },
       {
         "id": "F2",
         "title": "Historical validation and committed freeze",
-        "status": "in_progress"
+        "status": "done",
+        "validation_run": 45231266127,
+        "freeze_commit": "f9ca9847f1a6e8fac27bcf75067dcd2a5c6a0541",
+        "matches_per_priced_market": 1719
       },
       {
         "id": "F3",
         "title": "Single official holdout and betting simulation",
-        "status": "pending"
+        "status": "in_progress"
       },
       {
         "id": "F4",
