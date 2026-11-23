@@ -2,7 +2,7 @@
   "project": "football-predictor",
   "repo": "vjumbo264/football-predictor",
   "goal": "Phase 1 historical walk-forward Backtest Lab",
-  "status": "blocked",
+  "status": "in_progress",
   "current_phase": "1",
   "phases": [
     {
@@ -85,7 +85,8 @@
     "Betting grid: nine threshold pairs per candidate/model/market (90 planned combinations for four single models plus ensemble across two markets). One ticket per match/market (highest EV); the every-outcome control is exempt. Pick only if at least 75 validation bets and the week-bootstrap lower ROI bound exceeds zero; otherwise abstain. Closing replay uses the same tickets at the same named bookmaker, never retuning based on the close. Drawdown settles at day granularity because fixture settlement times are not universal.",
     "Actions separates synthetic smoke, validation, one-time official holdout, and aggregate-only republication. A public tag locks the single official run before score calculation. Re-publishing is not another experiment. A code/data mismatch invalidates the freeze. Optional current data need 50+ completed matches per league; baseline audit has eligible-match coverage rather than imputing prices.",
     "Report decision rule is deliberately conservative: evidence requires the ensemble's paired log loss and Brier intervals to favor it and the validation-selected betting rule to have positive lower bounds for ROI and matched same-book CLV. The poor-calibration diagnostic is ECE >6% plus failure to beat the league prior on log loss in both priced markets. Marginal, overlapping, or absent evidence is not a case for betting.",
-    "The smoke test includes a full tiny-fixture run with a temporary Git commit for the freeze, a holdout absent until after freeze, and checks for altered training bytes and prohibited overwrite. It never creates a project release. Packages pinned by requirements are included in the model-version digest."
+    "The smoke test includes a full tiny-fixture run with a temporary Git commit for the freeze, a holdout absent until after freeze, and checks for altered training bytes and prohibited overwrite. It never creates a project release. Packages pinned by requirements are included in the model-version digest.",
+    "Round 2: authorized private individual runtime use only. Training and holdout are fetched at separate gates; the Actions cache is encrypted using a repository secret. Per-match inputs and prediction/odds ledgers remain runner-local. No historical CSV or odds ledger was found in the reachable repository history, so no rewrite was needed. Publisher CSV alternate hostname and season ZIP are the fallbacks."
   ],
   "known_issues": [
     "No verified permission to publish the raw odds snapshot; do not mark the phase complete based on synthetic tests.",
@@ -97,7 +98,8 @@
     ],
     "release_tag": "",
     "secrets_expected": [
-      "GITHUB_TOKEN (built in)"
+      "GITHUB_TOKEN (built in)",
+      "FOOTBALL_DATA_CACHE_KEY"
     ]
   },
   "completed": [
@@ -114,7 +116,7 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:16:48Z",
+  "last_updated": "2026-11-23T17:46:28Z",
   "last_session_note": "Backtest Lab smoke run 45225733575 passed 28 tests in 34 seconds total; no historical backtest or release. Resume at B2 once authorized prices and results are available.",
   "verification": {
     "ci_run": 45225733714,
@@ -128,12 +130,15 @@
       {
         "id": "F1",
         "title": "Runtime ingestion and raw-data audit",
-        "status": "in_progress"
+        "status": "done",
+        "ingestion_run": 45231092060,
+        "ci_run": 45231091058,
+        "matches": 7230
       },
       {
         "id": "F2",
         "title": "Historical validation and committed freeze",
-        "status": "pending"
+        "status": "in_progress"
       },
       {
         "id": "F3",
