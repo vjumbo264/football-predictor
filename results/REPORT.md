@@ -3,6 +3,7 @@
 ## What we tested
 
 Five European leagues. Burn-in: 2020/21–2022/23. Validation: 2023/24. Held-out test: 2024/25–2025/26.
+The separately reported 2026/27 forward slice does not contribute to any holdout number below.
 Models were refit every 14 days with strictly earlier data. Teams with fewer than five prior games at refit were skipped. Headline market comparisons use identical matches with complete odds. Log loss and Brier: lower is better. ECE measures calibration error; lower is better. BTTS has no odds benchmark.
 Tried 21 model-parameter variants, one learned ensemble per market, and 90 betting combinations on validation. The test did not choose the settings.
 Forecast benchmarks remove the margin from the best available complete market snapshot under the frozen source order. Pinnacle is excluded from 23 July 2025 onward. The betting simulation uses named-book pre-close prices, not a market-average payout.
@@ -66,17 +67,14 @@ Lowest observed model log loss: **ensemble** (descriptive, not a new model selec
 | 1X2 / model | 0 | — — | — — | 0 |
 | 1X2 / bet_every_outcome | 10338 | -6.30% [-7.90%, -4.56%] | -0.12% [-0.31%, 0.05%] | 10338 |
 | 1X2 / bet_all_favourites | 3446 | -2.47% [-5.11%, 0.19%] | -0.50% [-0.71%, -0.28%] | 3446 |
-
-**1X2**: no validation candidate met the conservative activation rule; zero model bets is not zero ROI.
-
 | OU25 / model | 0 | — — | — — | 0 |
 | OU25 / bet_every_outcome | 6892 | -4.12% [-4.90%, -3.33%] | -0.21% [-0.28%, -0.15%] | 6892 |
 | OU25 / bet_all_favourites | 3446 | -4.59% [-7.92%, -1.20%] | -0.13% [-0.37%, 0.09%] | 3446 |
 
-**OU25**: no validation candidate met the conservative activation rule; zero model bets is not zero ROI.
+**Both markets:** No candidate met the validation activation rule. The frozen strategies placed zero bets, so their ROI and closing-line value are not estimable.
 
 
-ROI uses actual decimal prices and one unit per ticket; no margin removal in payouts. CLV is posted odds divided by the same book’s closing odds, minus one. Missing closes are not imputed. Hit rate, win-price coverage and daily drawdown are in the results JSON.
+ROI uses actual decimal prices and one unit per ticket; no margin removal in payouts. CLV is posted odds divided by the same book’s closing odds, minus one. Missing closes are not imputed. Hit rate, average odds, same-book close coverage and daily drawdown are in the betting results for strategies with tickets.
 
 ## Verdict
 
