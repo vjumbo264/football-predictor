@@ -6,4 +6,8 @@ __pycache__/
 *.key
 
 data/raw/
+data/cleaned/
+data/processed/
+**/predictions_*.csv
+**/predictions_*.meta.json
 results/local/
