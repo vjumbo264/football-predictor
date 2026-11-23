@@ -1,0 +1,43 @@
+name: Private-use Football-Data inputs
+description: Fetch stage-scoped inputs and cache only authenticated ciphertext
+inputs:
+  scope:
+    required: true
+    description: train or test
+  cache-key:
+    required: true
+    description: Actions secret for encrypting the cache, not the cache identifier
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      id: data-cache
+      with:
+        path: ${{ runner.temp }}/football-data/${{ inputs.scope }}.tar.gpg
+        key: football-data-encrypted-v1-${{ inputs.scope }}
+    - name: Restore or fetch the scoped snapshot
+      shell: bash
+      env:
+        SCOPE: ${{ inputs.scope }}
+        CACHE_HIT: ${{ steps.data-cache.outputs.cache-hit }}
+        FOOTBALL_DATA_CACHE_KEY: ${{ inputs.cache-key }}
+      run: |
+        set -euo pipefail
+        test -n "$FOOTBALL_DATA_CACHE_KEY"
+        case "$SCOPE" in
+          train) seasons=(2021 2122 2223 2324);;
+          test) seasons=(2425 2526);;
+          *) exit 2;;
+        esac
+        archive="$RUNNER_TEMP/football-data/$SCOPE.tar.gpg"
+        mkdir -p data/raw "$(dirname "$archive")"
+        if [ "$CACHE_HIT" = true ]; then
+          tarfile=$(mktemp)
+          trap 'rm -f "$tarfile"' EXIT
+          printf '%s\n' "$FOOTBALL_DATA_CACHE_KEY" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --output "$tarfile" --decrypt "$archive"
+          tar -xf "$tarfile" -C data/raw
+        fi
+        python scripts/fetch_snapshots.py "$SCOPE"
+        if [ "$CACHE_HIT" != true ]; then
+          tar -C data/raw -cf - "${seasons[@]}" | gpg --batch --yes --pinentry-mode loopback --passphrase-file <(printf '%s\n' "$FOOTBALL_DATA_CACHE_KEY") --cipher-algo AES256 --output "$archive" --symmetric
+        fi
