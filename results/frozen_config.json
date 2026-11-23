@@ -1,0 +1,78 @@
+{
+  "bet_trials": 90,
+  "betting": {
+    "1X2": null,
+    "OU25": null
+  },
+  "model_trials": 21,
+  "model_version": "15e577aa0d49f2fd06d83f0f39916919fca56a0611d0aa9370fee7cc5fc3158a",
+  "models": {
+    "dixon_coles": {
+      "half_life": 365,
+      "rho": -0.06
+    },
+    "elo": {
+      "home": 40,
+      "k": 12
+    },
+    "form": {
+      "window": 16
+    },
+    "poisson": {
+      "half_life": 365
+    }
+  },
+  "rules": {
+    "min_prior": 5,
+    "refit_days": 14
+  },
+  "schema": 1,
+  "stage": "validation",
+  "test_seasons": [
+    2024,
+    2025
+  ],
+  "training_manifest": {
+    "2020/D1": "48ec5d53d2452b6ebdbc07bd78a836d6a4686f99fc020439ee3292e685315e61",
+    "2020/E0": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+    "2020/F1": "124560ab39a1c256eb6ee5ad2dd1eed250c9780d0cbb34525d9abee41fbf7f70",
+    "2020/I1": "c09196fa18877547442807d375317299947abdd6d51a5e0df044cc6026e13f36",
+    "2020/SP1": "b4137db923101f464e8403c4973acbfaf7d71724ce93b4336fad580e894d9591",
+    "2021/D1": "034d0e1296e944dddf25e3c91b85ef5bd1ad25661b89d73878f5c73bfea4b9fc",
+    "2021/E0": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+    "2021/F1": "9e9eaefb8704264f8d55a718a119d940de4af7d7b4217ac4097b957406e16213",
+    "2021/I1": "6a9555d5a90e652a883fd2862a52545c06e264016cd770347c067a6d7c993170",
+    "2021/SP1": "2d9e619700712823d15716c07715133f8c3b1a09046930dcfc785a38633dee2e",
+    "2022/D1": "b716517b25033ce8e0243e967aa961876425a4c41e97c8aa8fa59f2aca061341",
+    "2022/E0": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+    "2022/F1": "18ea07d922e8b6360b81189637efd5aaf44779765db856bff208d5b1acf69b2f",
+    "2022/I1": "9960837f37a97ae700f876c87b85a8b7a2f5a5d05a53077830c21b9db8880c45",
+    "2022/SP1": "53348112526b5165539df240be350083989bb258f30c0ff7cacbc0165ca7e4b3",
+    "2023/D1": "1de8bc12a133dbbf71bc6ffda62082642f087f61b1b7c15ae9f2d320876fb07e",
+    "2023/E0": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+    "2023/F1": "ca0a4bf51d5b1ccfd0e1558ea41de6bb829df6c96c759888a87248d296d5adb7",
+    "2023/I1": "343a89db026fe4204ebeabd663cdfee8d02a45457828fc1cb63fa630ca170723",
+    "2023/SP1": "5323f596c7ed318e4bce95557a369d809d98501fa499ea5f41350cd45cf3c7d9"
+  },
+  "validation_season": 2023,
+  "weights": {
+    "1X2": {
+      "dixon_coles": 0.5303798517876633,
+      "elo": 0.46962014821233666,
+      "form": 3.165870343657673e-17,
+      "poisson": 8.044780119842443e-17
+    },
+    "BTTS": {
+      "dixon_coles": 0.4735635619593361,
+      "elo": 0.26575271937859923,
+      "form": 0.26068371866206447,
+      "poisson": 2.2136697856722787e-16
+    },
+    "OU25": {
+      "dixon_coles": 0.0,
+      "elo": 0.25056138257344984,
+      "form": 9.209788233500289e-18,
+      "poisson": 0.74943861742655
+    }
+  }
+}

@@ -1,0 +1,22 @@
+model,candidate,settings,objective,score,n
+poisson,0,"{""half_life"": 365}",scoreline_nll,2.9330290916291073,1719
+poisson,1,"{""half_life"": 180}",scoreline_nll,2.939111924255136,1719
+poisson,2,"{""half_life"": 730}",scoreline_nll,2.9355023657065717,1719
+dixon_coles,0,"{""half_life"": 365, ""rho"": 0.0}",scoreline_nll,2.9330290916291073,1719
+dixon_coles,1,"{""half_life"": 365, ""rho"": -0.06}",scoreline_nll,2.931371906377138,1719
+dixon_coles,2,"{""half_life"": 365, ""rho"": -0.12}",scoreline_nll,2.931882409010325,1719
+dixon_coles,3,"{""half_life"": 180, ""rho"": 0.0}",scoreline_nll,2.939111924255136,1719
+dixon_coles,4,"{""half_life"": 180, ""rho"": -0.06}",scoreline_nll,2.937495974568207,1719
+dixon_coles,5,"{""half_life"": 180, ""rho"": -0.12}",scoreline_nll,2.9380542076901555,1719
+dixon_coles,6,"{""half_life"": 730, ""rho"": 0.0}",scoreline_nll,2.9355023657065717,1719
+dixon_coles,7,"{""half_life"": 730, ""rho"": -0.06}",scoreline_nll,2.9338438749718776,1719
+dixon_coles,8,"{""half_life"": 730, ""rho"": -0.12}",scoreline_nll,2.9343810364305964,1719
+elo,0,"{""home"": 65, ""k"": 20}",market_macro_logloss,0.7818353906551745,1719
+elo,1,"{""home"": 40, ""k"": 20}",market_macro_logloss,0.7820665772267676,1719
+elo,2,"{""home"": 65, ""k"": 12}",market_macro_logloss,0.7818409208206419,1719
+elo,3,"{""home"": 40, ""k"": 12}",market_macro_logloss,0.7812601866951328,1719
+elo,4,"{""home"": 65, ""k"": 32}",market_macro_logloss,0.7832654257502053,1719
+elo,5,"{""home"": 40, ""k"": 32}",market_macro_logloss,0.783974641835405,1719
+form,0,"{""window"": 10}",market_macro_logloss,0.7983175395868808,1719
+form,1,"{""window"": 6}",market_macro_logloss,0.8024062921347914,1719
+form,2,"{""window"": 16}",market_macro_logloss,0.7964807403250513,1719
