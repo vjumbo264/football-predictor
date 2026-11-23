@@ -9,7 +9,7 @@
       "id": "1",
       "name": "Backtest Lab",
       "status": "blocked",
-      "notes": ""
+      "notes": "Code and synthetic acceptance verified; historical validation, holdout, and publication blocked on data authorization."
     }
   ],
   "queue": [
@@ -23,13 +23,13 @@
       "id": "B2",
       "title": "Data ingestion",
       "status": "blocked",
-      "notes": "Parser and quality generator implemented; no raw or cleaned historical files or observed counts until suitable five-league inputs and public-use permission are verified."
+      "notes": "Parser and quality output verified on synthetic data, including conflicting duplicates and both date formats. No authorized source snapshot or observed match counts."
     },
     {
       "id": "B3",
       "title": "Metrics and baselines",
       "status": "blocked",
-      "notes": "Proper scores, ECE/reliability, calendar-week bootstrap and bookmaker/league priors are implemented with synthetic tests; baselines.json requires authorized real odds and no test scoring before freeze."
+      "notes": "Hand-worked scoring and margin removal tests passed; historical baselines.json intentionally absent pending data and freeze."
     },
     {
       "id": "B4",
@@ -47,45 +47,54 @@
       "id": "B6",
       "title": "Walk-forward engine",
       "status": "blocked",
-      "notes": "Walk-forward and 21-variant grid/cache implemented; synthetic integration exercised in CI, but real validation and committed hyperparameter freeze require authorized data."
+      "notes": "Synthetic validation and strict cutoff/leakage tests passed. Real validation, configuration selection, and committed freeze require authorized snapshots."
     },
     {
       "id": "B7",
       "title": "Ensemble",
       "status": "blocked",
-      "notes": "Validation-only simplex learner and frozen-weights application implemented; learned historical weights and comparisons await authorized validation data."
+      "notes": "Synthetic validation-only simplex fit and application passed; historical weights and comparison absent."
     },
     {
       "id": "B8",
       "title": "Official test",
       "status": "blocked",
-      "notes": "Matched-score, coverage and reliability outputs implemented on synthetic inputs; official test not run. Requires committed real-data freeze and authorized holdout."
+      "notes": "Synthetic committed-freeze/holdout pipeline passed. The real holdout is untouched and the single-run tag has not been created."
     },
     {
       "id": "B9",
       "title": "Betting simulation",
       "status": "blocked",
-      "notes": "Flat stake and controls, threshold selection, same-book CLV, closing replay, bootstrap and plots implemented; no historical validation thresholds or test P&L without authorized data."
+      "notes": "Synthetic payout, edge, ROI/CLV and controls tests passed. No historical thresholds or ROI/CLV results."
     },
     {
       "id": "B10",
       "title": "Report and release",
       "status": "blocked",
-      "notes": "Manual workflow, report and release path pushed. Synthetic smoke can run; no historical freeze, result or release until rights and inputs are verified."
+      "notes": "Backtest Lab smoke run 45225733575 passed 28 tests in 34 seconds total; no historical backtest or release. Resume at B2 once authorized prices and results are available."
     }
   ],
   "decisions": [
-    "No host front-end: this environment does not require one. Section 6 placeholder requirement is subordinate to the hard rule.",
-    "BUILD_PROMPT.md records a credential-free summary rather than storing the raw prompt.",
-    "Use authorized immutable CSV snapshots only; no public cache until permission verified.",
-    "Burn-in 2020/21–2022/23; validation 2023/24; held-out 2024/25–2025/26; optional current 2026/27."
+    "This host does not require an applet; no front-end was created.",
+    "The build brief in the repo is summarized and contains no credential values.",
+    "Data access: no raw/public archival until upstream permission and suitable coverage are verified. The DataHub candidate has downstream PDDL but does not establish the required scope of prices or upstream permission; Kaggle and Footiqo did not establish a free exact replacement. Immutable authorized inputs can be parsed from disk; raw inputs and local run outputs are ignored by git.",
+    "Chronological split: 2020/21–2022/23 burn-in, 2023/24 validation, 2024/25–2025/26 test, 2026/27 forward slice only if eligible. No observed test results were inspected.",
+    "Prefer reliable Pinnacle for benchmarks; from 23 July 2025 exclude it per the provider's warning. Market average is a benchmark, not an executable price; simulation uses predefined named-book order with the same book's close, leaving missing close missing.",
+    "One-vs-rest ECE averages across classes; Brier sums over classes for 1X2 and binary markets. Confidence intervals resample whole calendar weeks with all paired rows retained.",
+    "Walk-forward uses per-league 14-day refits anchored to July 1 each season. Each fit and eligibility counts exclude the cutoff date. Require five previous matches per team available at the refit. Model grid has 21 variants; choose goal models by validation scoreline NLL and the other models by equal-market log loss. Prefer the first documented grid setting within 0.0001 nats of the current best.",
+    "Betting grid: nine threshold pairs per candidate/model/market (90 planned combinations for four single models plus ensemble across two markets). One ticket per match/market (highest EV); the every-outcome control is exempt. Pick only if at least 75 validation bets and the week-bootstrap lower ROI bound exceeds zero; otherwise abstain. Closing replay uses the same tickets at the same named bookmaker, never retuning based on the close. Drawdown settles at day granularity because fixture settlement times are not universal.",
+    "Actions separates synthetic smoke, validation, one-time official holdout, and aggregate-only republication. A public tag locks the single official run before score calculation. Re-publishing is not another experiment. A code/data mismatch invalidates the freeze. Optional current data need 50+ completed matches per league; baseline audit has eligible-match coverage rather than imputing prices.",
+    "Report decision rule is deliberately conservative: evidence requires the ensemble's paired log loss and Brier intervals to favor it and the validation-selected betting rule to have positive lower bounds for ROI and matched same-book CLV. The poor-calibration diagnostic is ECE >6% plus failure to beat the league prior on log loss in both priced markets. Marginal, overlapping, or absent evidence is not a case for betting.",
+    "The smoke test includes a full tiny-fixture run with a temporary Git commit for the freeze, a holdout absent until after freeze, and checks for altered training bytes and prohibited overwrite. It never creates a project release. Packages pinned by requirements are included in the model-version digest."
   ],
   "known_issues": [
     "No verified permission to publish the raw odds snapshot; do not mark the phase complete based on synthetic tests.",
     "First committed build brief is a redacted summary, not a verbatim transcript."
   ],
   "deployment": {
-    "urls": [],
+    "urls": [
+      "https://github.com/vjumbo264/football-predictor/actions/runs/45225733575"
+    ],
     "release_tag": "",
     "secrets_expected": [
       "GITHUB_TOKEN (built in)"
@@ -105,6 +114,12 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:15:05Z",
-  "last_session_note": "Manual workflow, report and release path pushed. Synthetic smoke can run; no historical freeze, result or release until rights and inputs are verified."
+  "last_updated": "2026-11-23T17:16:48Z",
+  "last_session_note": "Backtest Lab smoke run 45225733575 passed 28 tests in 34 seconds total; no historical backtest or release. Resume at B2 once authorized prices and results are available.",
+  "verification": {
+    "ci_run": 45225733714,
+    "smoke_run": 45225733575,
+    "synthetic_tests": 28,
+    "official_test_run": null
+  }
 }
