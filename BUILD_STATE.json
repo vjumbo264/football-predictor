@@ -34,8 +34,8 @@
     {
       "id": "B4",
       "title": "Poisson and Dixon–Coles",
-      "status": "pending",
-      "notes": ""
+      "status": "in_progress",
+      "notes": "Implemented penalized exponentially weighted likelihood with analytic gradient, goal matrices, synthetic recovery and strict-date leakage tests; pending Actions verification."
     },
     {
       "id": "B5",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:08:42Z",
-  "last_session_note": "Proper scores, ECE/reliability, calendar-week bootstrap and bookmaker/league priors are implemented with synthetic tests; baselines.json requires authorized real odds and no test scoring before freeze."
+  "last_updated": "2026-11-23T17:09:18Z",
+  "last_session_note": "Implemented penalized exponentially weighted likelihood with analytic gradient, goal matrices, synthetic recovery and strict-date leakage tests; pending Actions verification."
 }
