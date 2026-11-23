@@ -17,7 +17,7 @@
       "id": "B1",
       "title": "Repo scaffold and CI",
       "status": "in_progress",
-      "notes": "Public repository created; scaffold precedes real code."
+      "notes": "Package and CI skeleton ready; awaiting GitHub Actions verification."
     },
     {
       "id": "B2",
@@ -99,6 +99,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:05:49Z",
-  "last_session_note": "Public repository created; scaffold precedes real code."
+  "last_updated": "2026-11-23T17:05:59Z",
+  "last_session_note": "Package and CI skeleton ready; awaiting GitHub Actions verification."
 }
