@@ -16,6 +16,7 @@ def render(metrics, betting, cfg):
            'Five European leagues. Burn-in: 2020/21–2022/23. Validation: 2023/24. Held-out test: 2024/25–2025/26.',
            'Models were refit every 14 days with strictly earlier data. Teams with fewer than five prior games at refit were skipped. Headline market comparisons use identical matches with complete odds. Log loss and Brier: lower is better. ECE measures calibration error; lower is better. BTTS has no odds benchmark.',
            f'Tried {cfg["model_trials"]} model-parameter variants, one learned ensemble per market, and {cfg["bet_trials"]} betting combinations on validation. The test did not choose the settings.',
+           'Forecast benchmarks remove the margin from the best available complete market snapshot under the frozen source order. Pinnacle is excluded from 23 July 2025 onward. The betting simulation uses named-book pre-close prices, not a market-average payout.',
            '', '## Forecasts']
     evidence=[]; poor=[]
     for m in ('1X2','OU25','BTTS'):
@@ -30,7 +31,9 @@ def render(metrics, betting, cfg):
         ensemble=models.get('ensemble')
         if ensemble and m!='BTTS':
             delta=ensemble['versus_bookmaker_power']['log_loss']
-            lines += [f'Ensemble minus bookmaker log loss: {delta["delta"]:+.4f} (95% week-bootstrap CI {_ci(delta["ci95"])}).']
+            db=ensemble['versus_bookmaker_power']['brier']
+            lines += [f'Ensemble minus bookmaker log loss: {delta["delta"]:+.4f} (95% week-bootstrap CI {_ci(delta["ci95"])}).',
+                      f'Ensemble minus bookmaker Brier: {db["delta"]:+.4f} (95% week-bootstrap CI {_ci(db["ci95"])}).']
             poor.append(ensemble['ece']>.06 and ensemble['log_loss']>=models['league_prior']['log_loss'])
             s=betting[m]['model']; brier=ensemble['versus_bookmaker_power']['brier']['ci95']
             if (delta['ci95'] and delta['ci95']['upper']<0 and brier and brier['upper']<0 and
