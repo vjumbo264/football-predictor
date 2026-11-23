@@ -46,8 +46,8 @@
     {
       "id": "B6",
       "title": "Walk-forward engine",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Walk-forward and 21-variant grid/cache implemented; synthetic integration exercised in CI, but real validation and committed hyperparameter freeze require authorized data."
     },
     {
       "id": "B7",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:11:54Z",
-  "last_session_note": "Actions run 45224755289 verified probabilities, future/same-day leakage, Elo season retention and blow-out cap, and goal-based form."
+  "last_updated": "2026-11-23T17:11:56Z",
+  "last_session_note": "Walk-forward and 21-variant grid/cache implemented; synthetic integration exercised in CI, but real validation and committed hyperparameter freeze require authorized data."
 }
