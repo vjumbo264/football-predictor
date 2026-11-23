@@ -64,8 +64,8 @@
     {
       "id": "B9",
       "title": "Betting simulation",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Flat stake and controls, threshold selection, same-book CLV, closing replay, bootstrap and plots implemented; no historical validation thresholds or test P&L without authorized data."
     },
     {
       "id": "B10",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:12:34Z",
-  "last_session_note": "Matched-score, coverage and reliability outputs implemented on synthetic inputs; official test not run. Requires committed real-data freeze and authorized holdout."
+  "last_updated": "2026-11-23T17:13:15Z",
+  "last_session_note": "Flat stake and controls, threshold selection, same-book CLV, closing replay, bootstrap and plots implemented; no historical validation thresholds or test P&L without authorized data."
 }
