@@ -5,13 +5,13 @@ on:
       stage:
         required: true
         type: choice
-        options: [smoke, validate, official, publish]
+        options: [smoke, ingest, validate, official, publish]
         default: smoke
       freeze_commit:
-        description: 'Commit containing results/frozen_config.json (official stage only)'
+        description: 'Commit containing results/frozen_config.json (official only)'
         type: string
       data_authorized:
-        description: 'Confirmed permission for this public pipeline and requested outputs'
+        description: 'Confirmed private individual use; publish aggregate outputs only'
         type: boolean
         default: false
 permissions:
@@ -25,11 +25,13 @@ env:
   MPLBACKEND: Agg
 jobs:
   validation:
-    if: github.ref == 'refs/heads/main' && (inputs.stage == 'smoke' || inputs.stage == 'validate')
+    if: github.ref == 'refs/heads/main' && (inputs.stage == 'smoke' || inputs.stage == 'ingest' || inputs.stage == 'validate')
     runs-on: ubuntu-latest
     timeout-minutes: 28
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
@@ -38,32 +40,32 @@ jobs:
       - name: Synthetic acceptance tests
         run: python -m pytest -q
       - name: Check authorization
-        if: inputs.stage == 'validate'
+        if: inputs.stage != 'smoke'
         env:
           AUTHORIZED: ${{ inputs.data_authorized }}
         run: test "$AUTHORIZED" = true
-      - uses: actions/cache/restore@v4
-        id: prediction-cache
-        if: inputs.stage == 'validate'
+      - uses: ./.github/actions/football-data
+        if: inputs.stage != 'smoke'
         with:
-          path: results/local/validation/cache
-          key: validation-${{ github.sha }}
-      - name: Validation only — no holdout read
+          scope: train
+          cache-key: ${{ secrets.FOOTBALL_DATA_CACHE_KEY }}
+      - name: Check source completeness without scoring
+        if: inputs.stage == 'ingest'
+        run: python -m footpred.pipeline audit-training
+      - name: Validation only — no holdout inputs fetched or read
         if: inputs.stage == 'validate'
-        run: python -m footpred.pipeline validate --out results/local/validation
-      - uses: actions/cache/save@v4
-        if: always() && inputs.stage == 'validate' && inputs.data_authorized && steps.prediction-cache.outputs.cache-hit != 'true'
-        with:
-          path: results/local/validation/cache
-          key: validation-${{ github.sha }}
+        run: python -u -m footpred.pipeline validate --out results/local/validation
       - uses: actions/upload-artifact@v4
         if: inputs.stage == 'validate'
         with:
           name: validation-freeze-for-review
+          if-no-files-found: error
           path: |
-            results/local/validation/*.json
-            results/local/validation/*.csv
-            results/local/validation/*.md
+            results/local/validation/frozen_config.json
+            results/local/validation/search_log.csv
+            results/local/validation/betting_search_log.csv
+            results/local/validation/validation_metrics.json
+            results/local/validation/data_quality_validation.md
   official:
     if: github.ref == 'refs/heads/main' && inputs.stage == 'official' && inputs.data_authorized
     runs-on: ubuntu-latest
@@ -79,21 +81,31 @@ jobs:
           python-version: '3.11'
           cache: pip
       - run: python -m pip install -r requirements.txt
-      - name: Verify the committed freeze and acquire one-time holdout lock
+      - name: Require a previously committed freeze before fetching test inputs
         env:
           FREEZE_COMMIT: ${{ inputs.freeze_commit }}
         run: |
           [[ "$FREEZE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
           python -m footpred.pipeline verify-freeze --freeze-commit "$FREEZE_COMMIT"
-          for season in 2021 2122 2223 2324 2425 2526; do
-            for league in E0 SP1 I1 D1 F1; do
-              test -s "data/raw/$season/$league.csv"
-            done
-          done
-          if git ls-remote --exit-code --tags origin refs/tags/phase1-official-test-claimed; then
-            echo 'The one-time official run has already been claimed. Do not rerun the holdout.' >&2
-            exit 1
+      - uses: ./.github/actions/football-data
+        with:
+          scope: train
+          cache-key: ${{ secrets.FOOTBALL_DATA_CACHE_KEY }}
+      - uses: ./.github/actions/football-data
+        with:
+          scope: test
+          cache-key: ${{ secrets.FOOTBALL_DATA_CACHE_KEY }}
+      - name: Fetch optional separate forward slice (not cached)
+        run: |
+          if ! python scripts/fetch_snapshots.py forward; then
+            echo '::warning::Forward slice unavailable; the completed-season evaluation is unaffected.'
+            rm -rf data/raw/2627
           fi
+      - name: Check data integrity before acquiring one-time holdout lock
+        env:
+          FREEZE_COMMIT: ${{ inputs.freeze_commit }}
+        run: |
+          python -m footpred.pipeline preflight --freeze-commit "$FREEZE_COMMIT"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git tag -a phase1-official-test-claimed -m "Official holdout claimed by Actions run $GITHUB_RUN_ID; freeze $FREEZE_COMMIT"
@@ -101,27 +113,25 @@ jobs:
       - name: Run the single official holdout
         env:
           FREEZE_COMMIT: ${{ inputs.freeze_commit }}
-        run: python -m footpred.pipeline holdout --freeze-commit "$FREEZE_COMMIT" --out results/local/official
-      - name: Commit aggregate results, leaving odds ledgers out of the publication
+        run: python -u -m footpred.pipeline holdout --freeze-commit "$FREEZE_COMMIT" --out results/local/official
+      - name: Commit allowlisted aggregate outputs only
+        shell: bash
         run: |
-          cp results/local/official/*.json results/
-          rm -f results/predictions_*.meta.json
-          cp results/local/official/*.md results/
-          cp -r results/local/official/plots results/
-          if [ -d results/local/official/forward/plots ]; then
-            cp -r results/local/official/forward/plots results/forward-plots
+          src=results/local/official
+          for file in REPORT.md test_metrics.json betting_test.json baselines.json provenance.json data_quality.md; do
+            cp "$src/$file" "results/$file"
+            git add "results/$file"
+          done
+          cp -r "$src/plots" results/
+          git add results/plots/*.png
+          if [ -f "$src/forward_metrics.json" ]; then
+            cp "$src/forward_metrics.json" results/
+            cp -r "$src/forward/plots" results/forward-plots
+            git add results/forward_metrics.json results/forward-plots/*.png
           fi
-          git add results
           git commit -m "Record the single official Phase 1 holdout (run $GITHUB_RUN_ID)"
           git push origin HEAD:main
-      - name: Publish immutable official release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          tag="phase1-$GITHUB_RUN_NUMBER"
-          tar -czf "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" -C results plots
-          gh release create "$tag" results/REPORT.md results/test_metrics.json results/betting_test.json results/baselines.json results/frozen_config.json results/provenance.json results/data_quality.md "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" --target "$(git rev-parse HEAD)" --title "Phase 1 official holdout $GITHUB_RUN_NUMBER" --notes-file results/REPORT.md
-  republish:
+  publish:
     if: github.ref == 'refs/heads/main' && inputs.stage == 'publish' && inputs.data_authorized
     runs-on: ubuntu-latest
     timeout-minutes: 7
@@ -129,10 +139,16 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v5
-      - name: Publish existing official results without rescoring
+      - name: Publish the committed aggregates without rescoring
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           test -s results/test_metrics.json && test -s results/provenance.json
-          tar -czf "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" -C results plots
-          gh release create "phase1-$GITHUB_RUN_NUMBER" results/REPORT.md results/test_metrics.json results/betting_test.json results/baselines.json results/frozen_config.json results/provenance.json results/data_quality.md "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" --target "$GITHUB_SHA" --title "Phase 1 results publication $GITHUB_RUN_NUMBER" --notes-file results/REPORT.md
+          assets=(results/REPORT.md results/test_metrics.json results/betting_test.json results/baselines.json results/frozen_config.json results/provenance.json results/data_quality.md results/data_quality_validation.md results/validation_metrics.json results/search_log.csv results/betting_search_log.csv)
+          plot_dirs=(plots)
+          if [ -f results/forward_metrics.json ]; then
+            assets+=(results/forward_metrics.json)
+            plot_dirs+=(forward-plots)
+          fi
+          tar -czf "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" -C results "${plot_dirs[@]}"
+          gh release create "phase1-real-$GITHUB_RUN_NUMBER" "${assets[@]}" "$RUNNER_TEMP/reliability-and-betting-plots.tar.gz" --target "$GITHUB_SHA" --title "Phase 1 historical walk-forward backtest" --notes-file results/REPORT.md

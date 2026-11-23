@@ -76,13 +76,19 @@ def predictions(f, audit, seasons, cfg, out):
     return p
 
 
+def checked_holdout_inputs(root,cfg):
+    f,audit=load_snapshot(root,COMPLETED); integrity(audit)
+    if manifest([a for a in audit if a['season']<=VALIDATION]) != cfg['training_manifest']:
+        raise ValueError('historical training bytes differ from the committed freeze')
+    return f,audit
+
+
 def holdout(root,out,ref):
     commit,cfg=read_committed_freeze(ref)
     if (out/'test_metrics.json').exists():
         raise ValueError('test output already exists; never overwrite an official run')
-    f,audit=load_snapshot(root,COMPLETED); integrity(audit)
-    if manifest([a for a in audit if a['season']<=VALIDATION]) != cfg['training_manifest']:
-        raise ValueError('historical training bytes differ from the committed freeze')
+    f,audit=checked_holdout_inputs(root,cfg)
+    print(f'Official evaluation inputs verified: {len(f):,} matches total, including burn-in and validation')
     p=predictions(f,audit,TEST,cfg,out)
     m=evaluate(p,out/'plots'); betting=assess(p,cfg['betting'],out/'plots')
     write_json(out/'betting_test.json',betting)
@@ -96,28 +102,39 @@ def holdout(root,out,ref):
     write_json(out/'baselines.json',b)
     # Never use the current season in tuning or in the official test statistics.
     if all((root/season_code(FORWARD)/f'{l}.csv').is_file() for l in LEAGUES):
-        forward,fa=load_snapshot(root,(FORWARD,))
-        for a in fa:
-            if a['rejected']:
-                raise ValueError('current snapshot contains rejected rows; omit or correct it separately')
-        if all(a['matches']>=50 for a in fa):
+        try:
+            forward,fa=load_snapshot(root,(FORWARD,))
+        except ValueError:
+            print('Omitted optional forward slice: at least one source did not parse.')
+            return
+        print('Forward completed-match counts: '+', '.join(f'{a["league"]}={a["matches"]}' for a in fa))
+        if all(a['matches']>=50 and not a['rejected'] for a in fa):
             extra=predictions(pd.concat([f,forward],ignore_index=True),audit+fa,(FORWARD,),cfg,out/'forward')
             write_json(out/'forward_metrics.json',{'label':'2026/27 extra forward slice, excluded from official test','metrics':evaluate(extra,out/'forward'/'plots')})
+        else:
+            print('Omitted optional forward slice: the 50-per-league or no-reject gate was not met.')
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('stage',choices=['validate','verify-freeze','holdout'])
+    p.add_argument('stage',choices=['audit-training','validate','verify-freeze','preflight','holdout'])
     p.add_argument('--data',type=Path,default=Path('data/raw'))
     p.add_argument('--out',type=Path,default=Path('results/local'))
     p.add_argument('--freeze-commit')
     a=p.parse_args()
-    if a.stage=='validate':
+    if a.stage=='audit-training':
+        f,audit=load_snapshot(a.data,COMPLETED[:-2]); integrity(audit)
+        print(f'{len(audit)} training inputs, {len(f):,} matches; all completeness checks passed')
+    elif a.stage=='validate':
         validation(a.data,a.out)
     elif not a.freeze_commit:
         p.error('--freeze-commit is required')
     elif a.stage=='verify-freeze':
         print(read_committed_freeze(a.freeze_commit)[0])
+    elif a.stage=='preflight':
+        _,cfg=read_committed_freeze(a.freeze_commit)
+        checked_holdout_inputs(a.data,cfg)
+        print('Frozen training hashes and completed-season input integrity verified; no scores calculated')
     else:
         holdout(a.data,a.out,a.freeze_commit)
 
