@@ -58,8 +58,8 @@
     {
       "id": "B8",
       "title": "Official test",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Matched-score, coverage and reliability outputs implemented on synthetic inputs; official test not run. Requires committed real-data freeze and authorized holdout."
     },
     {
       "id": "B9",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:12:15Z",
-  "last_session_note": "Validation-only simplex learner and frozen-weights application implemented; learned historical weights and comparisons await authorized validation data."
+  "last_updated": "2026-11-23T17:12:34Z",
+  "last_session_note": "Matched-score, coverage and reliability outputs implemented on synthetic inputs; official test not run. Requires committed real-data freeze and authorized holdout."
 }
