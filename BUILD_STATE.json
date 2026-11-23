@@ -2,13 +2,13 @@
   "project": "football-predictor",
   "repo": "vjumbo264/football-predictor",
   "goal": "Phase 1 historical walk-forward Backtest Lab",
-  "status": "in_progress",
+  "status": "blocked",
   "current_phase": "1",
   "phases": [
     {
       "id": "1",
       "name": "Backtest Lab",
-      "status": "in_progress",
+      "status": "blocked",
       "notes": ""
     }
   ],
@@ -22,8 +22,8 @@
     {
       "id": "B2",
       "title": "Data ingestion",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Parser and quality generator implemented; no raw or cleaned historical files or observed counts until suitable five-league inputs and public-use permission are verified."
     },
     {
       "id": "B3",
@@ -76,7 +76,9 @@
   ],
   "decisions": [
     "No host front-end: this environment does not require one. Section 6 placeholder requirement is subordinate to the hard rule.",
-    "BUILD_PROMPT.md records a credential-free summary rather than storing the raw prompt."
+    "BUILD_PROMPT.md records a credential-free summary rather than storing the raw prompt.",
+    "Use authorized immutable CSV snapshots only; no public cache until permission verified.",
+    "Burn-in 2020/21–2022/23; validation 2023/24; held-out 2024/25–2025/26; optional current 2026/27."
   ],
   "known_issues": [],
   "deployment": {
@@ -100,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:07:55Z",
-  "last_session_note": "Public scaffold and package pushed; Actions run 45223898040 passed. Credential-free build brief is a summary, not a verbatim archive."
+  "last_updated": "2026-11-23T17:07:57Z",
+  "last_session_note": "Parser and quality generator implemented; no raw or cleaned historical files or observed counts until suitable five-league inputs and public-use permission are verified."
 }
