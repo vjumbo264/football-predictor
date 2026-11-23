@@ -42,7 +42,8 @@ jobs:
         env:
           AUTHORIZED: ${{ inputs.data_authorized }}
         run: test "$AUTHORIZED" = true
-      - uses: actions/cache@v4
+      - uses: actions/cache/restore@v4
+        id: prediction-cache
         if: inputs.stage == 'validate'
         with:
           path: results/local/validation/cache
@@ -50,6 +51,11 @@ jobs:
       - name: Validation only — no holdout read
         if: inputs.stage == 'validate'
         run: python -m footpred.pipeline validate --out results/local/validation
+      - uses: actions/cache/save@v4
+        if: always() && inputs.stage == 'validate' && inputs.data_authorized && steps.prediction-cache.outputs.cache-hit != 'true'
+        with:
+          path: results/local/validation/cache
+          key: validation-${{ github.sha }}
       - uses: actions/upload-artifact@v4
         if: inputs.stage == 'validate'
         with:

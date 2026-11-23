@@ -85,6 +85,9 @@ def predict(frame, seasons, model, settings=None, *, refit_days=REFIT_DAYS, min_
 def code_sha():
     code_root=Path(__file__).parent
     h=hashlib.sha256()
+    req = code_root.parent / "requirements.txt"
+    if req.is_file():
+        h.update(req.read_bytes())
     for path in sorted(code_root.rglob('*.py')):
         h.update(str(path.relative_to(code_root)).encode()+b'\0'+path.read_bytes())
     return h.hexdigest()
