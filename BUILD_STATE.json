@@ -2,14 +2,14 @@
   "project": "football-predictor",
   "repo": "vjumbo264/football-predictor",
   "goal": "Phase 1 historical walk-forward Backtest Lab",
-  "status": "in_progress",
+  "status": "complete",
   "current_phase": "1",
   "phases": [
     {
       "id": "1",
       "name": "Backtest Lab",
-      "status": "blocked",
-      "notes": "Code and synthetic acceptance verified; historical validation, holdout, and publication blocked on data authorization."
+      "status": "complete",
+      "notes": "Historical run, report and aggregate release verified; the original build queue below records the prior session, superseded by fix_round_2."
     }
   ],
   "queue": [
@@ -91,14 +91,17 @@
     "Release report presentation was corrected after scoring; no metric changed and the holdout was not rerun."
   ],
   "known_issues": [
-    "No verified permission to publish the raw odds snapshot; do not mark the phase complete based on synthetic tests.",
+    "Raw and per-match odds are intentionally not published; historical evaluation completed from private runtime inputs.",
     "First committed build brief is a redacted summary, not a verbatim transcript."
   ],
   "deployment": {
     "urls": [
-      "https://github.com/vjumbo264/football-predictor/actions/runs/45225733575"
+      "https://github.com/vjumbo264/football-predictor/actions/runs/45225733575",
+      "https://github.com/vjumbo264/football-predictor/actions/runs/45231812012",
+      "https://github.com/vjumbo264/football-predictor/actions/runs/45232308360",
+      "https://github.com/vjumbo264/football-predictor/releases/tag/phase1-real-6"
     ],
-    "release_tag": "",
+    "release_tag": "phase1-real-6",
     "secrets_expected": [
       "GITHUB_TOKEN (built in)",
       "FOOTBALL_DATA_CACHE_KEY"
@@ -107,19 +110,15 @@
   "completed": [
     "B1",
     "B4",
-    "B5"
+    "B5",
+    "F1",
+    "F2",
+    "F3",
+    "F4"
   ],
-  "next_steps": [
-    "B2",
-    "B3",
-    "B6",
-    "B7",
-    "B8",
-    "B9",
-    "B10"
-  ],
-  "last_updated": "2026-11-23T17:52:12Z",
-  "last_session_note": "Backtest Lab smoke run 45225733575 passed 28 tests in 34 seconds total; no historical backtest or release. Resume at B2 once authorized prices and results are available.",
+  "next_steps": [],
+  "last_updated": "2026-11-23T17:52:54Z",
+  "last_session_note": "Round 2 completed: once-only historical holdout, no convincing betting edge, aggregate-only release published.",
   "verification": {
     "ci_run": 45225733714,
     "smoke_run": 45225733575,
@@ -127,7 +126,7 @@
     "official_test_run": 45231812012
   },
   "fix_round_2": {
-    "status": "in_progress",
+    "status": "complete",
     "queue": [
       {
         "id": "F1",
@@ -156,7 +155,11 @@
       {
         "id": "F4",
         "title": "Report and unique GitHub Release",
-        "status": "in_progress"
+        "status": "done",
+        "publish_run": 45232308360,
+        "release_tag": "phase1-real-6",
+        "release_url": "https://github.com/vjumbo264/football-predictor/releases/tag/phase1-real-6",
+        "verdict": "a"
       }
     ]
   }
