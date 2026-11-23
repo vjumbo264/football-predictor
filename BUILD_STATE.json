@@ -40,8 +40,8 @@
     {
       "id": "B5",
       "title": "Elo and form",
-      "status": "in_progress",
-      "notes": "Elo pre-result Davidson/market mappings and date-batched rating updates plus venue-split goal form implemented; awaiting Actions verification."
+      "status": "done",
+      "notes": "Actions run 45224755289 verified probabilities, future/same-day leakage, Elo season retention and blow-out cap, and goal-based form."
     },
     {
       "id": "B6",
@@ -90,18 +90,18 @@
   },
   "completed": [
     "B1",
-    "B4"
+    "B4",
+    "B5"
   ],
   "next_steps": [
     "B2",
     "B3",
-    "B5",
     "B6",
     "B7",
     "B8",
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:10:37Z",
-  "last_session_note": "Elo pre-result Davidson/market mappings and date-batched rating updates plus venue-split goal form implemented; awaiting Actions verification."
+  "last_updated": "2026-11-23T17:11:54Z",
+  "last_session_note": "Actions run 45224755289 verified probabilities, future/same-day leakage, Elo season retention and blow-out cap, and goal-based form."
 }
