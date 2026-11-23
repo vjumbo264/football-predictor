@@ -28,8 +28,8 @@
     {
       "id": "B3",
       "title": "Metrics and baselines",
-      "status": "pending",
-      "notes": ""
+      "status": "blocked",
+      "notes": "Proper scores, ECE/reliability, calendar-week bootstrap and bookmaker/league priors are implemented with synthetic tests; baselines.json requires authorized real odds and no test scoring before freeze."
     },
     {
       "id": "B4",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:07:57Z",
-  "last_session_note": "Parser and quality generator implemented; no raw or cleaned historical files or observed counts until suitable five-league inputs and public-use permission are verified."
+  "last_updated": "2026-11-23T17:08:42Z",
+  "last_session_note": "Proper scores, ECE/reliability, calendar-week bootstrap and bookmaker/league priors are implemented with synthetic tests; baselines.json requires authorized real odds and no test scoring before freeze."
 }
