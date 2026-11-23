@@ -13,3 +13,5 @@
 - The smoke test includes a full tiny-fixture run with a temporary Git commit for the freeze, a holdout absent until after freeze, and checks for altered training bytes and prohibited overwrite. It never creates a project release. Packages pinned by requirements are included in the model-version digest.
 
 - Round 2: authorized private individual runtime use only. Training and holdout are fetched at separate gates; the Actions cache is encrypted using a repository secret. Per-match inputs and prediction/odds ledgers remain runner-local. No historical CSV or odds ledger was found in the reachable repository history, so no rewrite was needed. Publisher CSV alternate hostname and season ZIP are the fallbacks.
+
+- The official holdout ran once under phase1-official-test-claimed without retuning. The eligible 2026/27 forward slice is separate, not included in the official metrics. Neither priced market met the validation-only betting activation rule, so the frozen strategy abstained on holdout.
