@@ -121,5 +121,30 @@
     "smoke_run": 45225733575,
     "synthetic_tests": 28,
     "official_test_run": null
+  },
+  "fix_round_2": {
+    "status": "in_progress",
+    "queue": [
+      {
+        "id": "F1",
+        "title": "Runtime ingestion and raw-data audit",
+        "status": "in_progress"
+      },
+      {
+        "id": "F2",
+        "title": "Historical validation and committed freeze",
+        "status": "pending"
+      },
+      {
+        "id": "F3",
+        "title": "Single official holdout and betting simulation",
+        "status": "pending"
+      },
+      {
+        "id": "F4",
+        "title": "Report and unique GitHub Release",
+        "status": "pending"
+      }
+    ]
   }
 }
