@@ -34,8 +34,8 @@
     {
       "id": "B4",
       "title": "Poisson and Dixon–Coles",
-      "status": "in_progress",
-      "notes": "Implemented penalized exponentially weighted likelihood with analytic gradient, goal matrices, synthetic recovery and strict-date leakage tests; pending Actions verification."
+      "status": "done",
+      "notes": "Action 45224503537 passed score-matrix identities, synthetic recovery, and same-day/future leakage for both variants."
     },
     {
       "id": "B5",
@@ -89,12 +89,12 @@
     ]
   },
   "completed": [
-    "B1"
+    "B1",
+    "B4"
   ],
   "next_steps": [
     "B2",
     "B3",
-    "B4",
     "B5",
     "B6",
     "B7",
@@ -102,6 +102,6 @@
     "B9",
     "B10"
   ],
-  "last_updated": "2026-11-23T17:09:18Z",
-  "last_session_note": "Implemented penalized exponentially weighted likelihood with analytic gradient, goal matrices, synthetic recovery and strict-date leakage tests; pending Actions verification."
+  "last_updated": "2026-11-23T17:10:35Z",
+  "last_session_note": "Action 45224503537 passed score-matrix identities, synthetic recovery, and same-day/future leakage for both variants."
 }
