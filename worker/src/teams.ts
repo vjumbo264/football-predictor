@@ -43,24 +43,30 @@ export function normalizeText(raw: string): string {
 }
 
 export async function loadTeams(db: D1Database): Promise<TeamRecord[]> {
+  const byCanon = new Map<string, TeamRecord>();
+  for (const b of BUILTIN_TEAMS) {
+    byCanon.set(b.canonical_name, { ...b, aliases: [...b.aliases] });
+  }
   const { results } = await db
     .prepare('SELECT canonical_name, display_name, short_name, aliases_json FROM teams ORDER BY canonical_name')
     .all<{ canonical_name: string; display_name: string; short_name: string | null; aliases_json: string }>();
-  if (!results.length) return BUILTIN_TEAMS;
-  return results.map((r) => {
-    let aliases: string[] = [];
+  for (const r of results) {
+    let dbAliases: string[] = [];
     try {
-      aliases = JSON.parse(r.aliases_json) as string[];
+      dbAliases = JSON.parse(r.aliases_json) as string[];
     } catch {
-      aliases = [];
+      dbAliases = [];
     }
-    return {
+    const existing = byCanon.get(r.canonical_name);
+    const mergedAliases = Array.from(new Set([...(existing?.aliases ?? []), ...dbAliases]));
+    byCanon.set(r.canonical_name, {
       canonical_name: r.canonical_name,
-      display_name: r.display_name,
-      short_name: r.short_name,
-      aliases,
-    };
-  });
+      display_name: r.display_name || existing?.display_name || r.canonical_name,
+      short_name: r.short_name ?? existing?.short_name ?? null,
+      aliases: mergedAliases,
+    });
+  }
+  return Array.from(byCanon.values());
 }
 
 export function resolveTeam(queryRaw: string, teams: TeamRecord[]): TeamResolution {

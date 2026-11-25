@@ -1,6 +1,8 @@
 import { verifyBearerToken, constantTimeEqual } from './auth';
+import { handleLiveCommand, handleResultsCommand } from './commands_live_results';
 import { handleDayCommand, handleMatchCommand } from './commands_schedule';
 import { IngestValidationError, getApiUsage, ingestData, utcDateStr } from './db';
+import type { FetchLike } from './sources';
 import {
   createTelegramSender,
   handleTelegramUpdate,
@@ -20,13 +22,18 @@ function jsonResponse(data: unknown, status = 200): Response {
 export interface RequestTestHooks {
   sender?: TelegramSender;
   deps?: CommandDependencies;
+  fetchFn?: FetchLike;
 }
 
-const DEFAULT_COMMAND_DEPS: CommandDependencies = {
-  onToday: (env, nowIso) => handleDayCommand(env, 0, nowIso),
-  onTomorrow: (env, nowIso) => handleDayCommand(env, 1, nowIso),
-  onMatch: (env, query, nowIso) => handleMatchCommand(env, query, nowIso),
-};
+export function buildCommandDeps(fetchFn: FetchLike = fetch): CommandDependencies {
+  return {
+    onToday: (env, nowIso) => handleDayCommand(env, 0, nowIso),
+    onTomorrow: (env, nowIso) => handleDayCommand(env, 1, nowIso),
+    onMatch: (env, query, nowIso) => handleMatchCommand(env, query, nowIso),
+    onLive: (env, nowIso) => handleLiveCommand(env, nowIso, fetchFn),
+    onResults: (env, nowIso) => handleResultsCommand(env, nowIso),
+  };
+}
 
 export async function handleRequest(
   request: Request,
@@ -87,7 +94,10 @@ export async function handleRequest(
       return jsonResponse({ ok: false, error: 'Invalid Telegram update JSON' }, 400);
     }
     const sender = hooks.sender ?? createTelegramSender(env.TELEGRAM_BOT_TOKEN);
-    const deps: CommandDependencies = { ...DEFAULT_COMMAND_DEPS, ...hooks.deps };
+    const deps: CommandDependencies = {
+      ...buildCommandDeps(hooks.fetchFn ?? fetch),
+      ...hooks.deps,
+    };
     const result = await handleTelegramUpdate(update, env, sender, deps, nowIso);
     return jsonResponse({ ok: true, ...result }, 200);
   }

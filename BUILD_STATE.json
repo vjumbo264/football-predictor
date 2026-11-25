@@ -200,13 +200,13 @@
       {
         "id": "P6",
         "title": "/live and /results",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented worker/src/sources.ts, worker/src/commands_live_results.ts (/live with 60s D1 cache, 80/day API-Football cap + FPL/stale-cache fallback, and /results with hit/miss display), plus merged built-in provider aliases in teams.ts. Verified 10/10 Worker tests including cache hit, budget exhaustion fallback, and NS -> LIVE -> FT lifecycle."
       },
       {
         "id": "P7",
         "title": "Result grading and /performance",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -250,9 +250,9 @@
       "bot_username": "ScripturaMotionsaltBot"
     },
     "next_steps": [
-      "P6: Implement /live (60s cache + 80/day budget guard + fallback) and /results (recent settled scores + hit/miss)."
+      "P7: Implement Worker cron grading (idempotent, append-only prediction_results) and /performance command."
     ],
-    "last_updated": "2026-11-25T03:44:50Z",
-    "last_session_note": "Completed P5 (/today, /tomorrow, /match with Lagos time, team aliases, and provisional >36h handling)."
+    "last_updated": "2026-11-25T03:45:55Z",
+    "last_session_note": "Completed P6 (/live with 60s cache + 80/day budget fallback, and /results)."
   }
 }
