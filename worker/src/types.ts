@@ -15,6 +15,33 @@ export interface Env {
 export type MatchStatus = 'NS' | 'LIVE' | 'FT' | 'PST';
 export type Outcome = 'H' | 'D' | 'A';
 
+export interface InlineKeyboardButton {
+  text: string;
+  callback_data: string;
+}
+
+export interface InlineKeyboardMarkup {
+  inline_keyboard: InlineKeyboardButton[][];
+}
+
+export interface ReplyKeyboardButton {
+  text: string;
+}
+
+export interface ReplyKeyboardMarkup {
+  keyboard: ReplyKeyboardButton[][];
+  resize_keyboard?: boolean;
+  is_persistent?: boolean;
+  one_time_keyboard?: boolean;
+}
+
+export type ReplyMarkup = InlineKeyboardMarkup | ReplyKeyboardMarkup;
+
+export interface RenderedScreen {
+  text: string;
+  inline_keyboard?: InlineKeyboardButton[][];
+}
+
 export interface IngestTeam {
   canonical_name: string;
   display_name: string;
