@@ -3,7 +3,7 @@
   "repo": "vjumbo264/football-predictor",
   "goal": "Phase 1 historical walk-forward Backtest Lab",
   "status": "complete",
-  "current_phase": "1",
+  "current_phase": "2",
   "phases": [
     {
       "id": "1",
@@ -33,7 +33,7 @@
     },
     {
       "id": "B4",
-      "title": "Poisson and Dixon–Coles",
+      "title": "Poisson and Dixon\u2013Coles",
       "status": "done",
       "notes": "Action 45224503537 passed score-matrix identities, synthetic recovery, and same-day/future leakage for both variants."
     },
@@ -78,7 +78,7 @@
     "This host does not require an applet; no front-end was created.",
     "The build brief in the repo is summarized and contains no credential values.",
     "Data access: no raw/public archival until upstream permission and suitable coverage are verified. The DataHub candidate has downstream PDDL but does not establish the required scope of prices or upstream permission; Kaggle and Footiqo did not establish a free exact replacement. Immutable authorized inputs can be parsed from disk; raw inputs and local run outputs are ignored by git.",
-    "Chronological split: 2020/21–2022/23 burn-in, 2023/24 validation, 2024/25–2025/26 test, 2026/27 forward slice only if eligible. No observed test results were inspected.",
+    "Chronological split: 2020/21\u20132022/23 burn-in, 2023/24 validation, 2024/25\u20132025/26 test, 2026/27 forward slice only if eligible. No observed test results were inspected.",
     "Prefer reliable Pinnacle for benchmarks; from 23 July 2025 exclude it per the provider's warning. Market average is a benchmark, not an executable price; simulation uses predefined named-book order with the same book's close, leaving missing close missing.",
     "One-vs-rest ECE averages across classes; Brier sums over classes for 1X2 and binary markets. Confidence intervals resample whole calendar weeks with all paired rows retained.",
     "Walk-forward uses per-league 14-day refits anchored to July 1 each season. Each fit and eligibility counts exclude the cutoff date. Require five previous matches per team available at the refit. Model grid has 21 variants; choose goal models by validation scoreline NLL and the other models by equal-market log loss. Prefer the first documented grid setting within 0.0001 nats of the current best.",
@@ -162,5 +162,92 @@
         "verdict": "a"
       }
     ]
+  },
+  "phase_2": {
+    "goal": "Phase 2 Premier League Telegram win/draw/loss prediction bot on Cloudflare Workers + D1 + GitHub Actions",
+    "status": "in_progress",
+    "queue": [
+      {
+        "id": "P1",
+        "title": "Data source check and DATA_SOURCES.md",
+        "status": "in_progress",
+        "notes": ""
+      },
+      {
+        "id": "P2",
+        "title": "D1 schema and Worker skeleton",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P3",
+        "title": "Daily prediction job (Python)",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P4",
+        "title": "Telegram webhook and access control",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P5",
+        "title": "/today, /tomorrow, /match",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P6",
+        "title": "/live and /results",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P7",
+        "title": "Result grading and /performance",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P8",
+        "title": "End-to-end verification and docs",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "P9",
+        "title": "Optional daily morning message",
+        "status": "pending",
+        "notes": ""
+      }
+    ],
+    "decisions": [
+      "Created minimal host-frontend/index.html placeholder and redacted docs/PHASE2_PROMPT.md without credentials."
+    ],
+    "known_issues": [],
+    "deployment": {
+      "worker_name": null,
+      "worker_url": null,
+      "d1_database_name": null,
+      "d1_database_id": null,
+      "webhook_status": "not_configured",
+      "release_tag": null,
+      "secrets_expected": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID",
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_WEBHOOK_SECRET",
+        "FOOTBALL_API_KEY",
+        "ALLOWED_TELEGRAM_IDS",
+        "INGEST_SECRET",
+        "FOOTBALL_DATA_CACHE_KEY"
+      ]
+    },
+    "next_steps": [
+      "P1: Empirically verify API-Football and fallback data sources for 2026/27 Premier League."
+    ],
+    "last_updated": "2026-11-25T03:33:01Z",
+    "last_session_note": "Initialized Phase 2 state, host-frontend placeholder, and redacted PHASE2_PROMPT.md."
   }
 }
