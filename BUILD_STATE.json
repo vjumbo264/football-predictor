@@ -3,7 +3,7 @@
   "repo": "vjumbo264/football-predictor",
   "goal": "Phase 1 historical walk-forward Backtest Lab",
   "status": "complete",
-  "current_phase": "2",
+  "current_phase": "fix_round_3",
   "phases": [
     {
       "id": "1",
@@ -253,5 +253,75 @@
     "next_steps": [],
     "last_updated": "2026-11-25T03:49:19Z",
     "last_session_note": "Completed P1 through P9: Premier League Telegram bot live on Cloudflare Workers + D1, CI green, Release phase2-40 published."
+  },
+  "fix_round_3": {
+    "goal": "Fix Round 3: New bot identity, button-driven menus, quick-access keyboard, onboarding, and Telegram admin approval tools",
+    "status": "in_progress",
+    "queue": [
+      {
+        "id": "K1",
+        "title": "Clean slate for commands, name, descriptions and picture",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K2",
+        "title": "Main menu with inline buttons",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K3",
+        "title": "Match lists and match detail as buttons",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K4",
+        "title": "Find a match without typing",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K5",
+        "title": "Quick-access keyboard and onboarding",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K6",
+        "title": "Admin tools and approval flow",
+        "status": "pending",
+        "notes": ""
+      },
+      {
+        "id": "K7",
+        "title": "Verification, docs and Release",
+        "status": "pending",
+        "notes": ""
+      }
+    ],
+    "decisions": [],
+    "known_issues": [],
+    "deployment": {
+      "worker_name": "football-predictor",
+      "worker_url": "https://football-predictor.vjumbo264.workers.dev",
+      "d1_database_name": "football-predictor-db",
+      "d1_database_id": "b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d",
+      "bot_username": "MotionsaltFootballBot",
+      "secrets_expected": [
+        "CLOUDFLARE_API_TOKEN",
+        "CLOUDFLARE_ACCOUNT_ID",
+        "TELEGRAM_BOT_TOKEN",
+        "TELEGRAM_WEBHOOK_SECRET",
+        "FOOTBALL_API_KEY",
+        "ALLOWED_TELEGRAM_IDS",
+        "ADMIN_TELEGRAM_IDS",
+        "INGEST_SECRET",
+        "FOOTBALL_DATA_CACHE_KEY",
+        "WORKER_URL"
+      ]
+    },
+    "last_updated": "2026-11-25T09:20:00Z"
   }
 }
