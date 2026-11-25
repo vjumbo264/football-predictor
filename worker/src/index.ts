@@ -1,14 +1,15 @@
-import { runMorningDigest } from './morning';
 import { verifyBearerToken, constantTimeEqual } from './auth';
 import { handleLiveCommand, handleResultsCommand } from './commands_live_results';
 import { handleDayCommand, handleMatchCommand } from './commands_schedule';
 import { IngestValidationError, getApiUsage, ingestData, utcDateStr } from './db';
 import { handlePerformanceCommand, runGradingPass } from './grading';
+import { runMorningDigest } from './morning';
 import type { FetchLike } from './sources';
 import {
-  createTelegramSender,
+  createTelegramClient,
   handleTelegramUpdate,
   type CommandDependencies,
+  type TelegramClient,
   type TelegramSender,
   type TelegramUpdate,
 } from './telegram';
@@ -23,6 +24,7 @@ function jsonResponse(data: unknown, status = 200): Response {
 
 export interface RequestTestHooks {
   sender?: TelegramSender;
+  telegram?: TelegramClient;
   deps?: CommandDependencies;
   fetchFn?: FetchLike;
 }
@@ -104,12 +106,13 @@ export async function handleRequest(
     } catch {
       return jsonResponse({ ok: false, error: 'Invalid Telegram update JSON' }, 400);
     }
-    const sender = hooks.sender ?? createTelegramSender(env.TELEGRAM_BOT_TOKEN);
+    const transport: TelegramSender | TelegramClient =
+      hooks.telegram ?? hooks.sender ?? createTelegramClient(env.TELEGRAM_BOT_TOKEN, hooks.fetchFn ?? fetch);
     const deps: CommandDependencies = {
       ...buildCommandDeps(hooks.fetchFn ?? fetch),
       ...hooks.deps,
     };
-    const result = await handleTelegramUpdate(update, env, sender, deps, nowIso);
+    const result = await handleTelegramUpdate(update, env, transport, deps, nowIso);
     return jsonResponse({ ok: true, ...result }, 200);
   }
 
