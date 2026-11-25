@@ -261,8 +261,8 @@
       {
         "id": "K1",
         "title": "Clean slate for commands, name, descriptions and picture",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Replaced TELEGRAM_BOT_TOKEN in GitHub Actions + Worker secrets, added ADMIN_TELEGRAM_IDS, generated 640x640 assets/avatar.png, created idempotent scripts/setup_bot_profile.mjs, wired into deploy-worker.yml, verified getMe/getMyName/getMyCommands/descriptions/menuButton and setMyProfilePhoto via Bot API."
       },
       {
         "id": "K2",
@@ -301,7 +301,9 @@
         "notes": ""
       }
     ],
-    "decisions": [],
+    "decisions": [
+      "Bot profile photo set directly via Telegram Bot API setMyProfilePhoto using assets/avatar.png."
+    ],
     "known_issues": [],
     "deployment": {
       "worker_name": "football-predictor",
@@ -322,6 +324,6 @@
         "WORKER_URL"
       ]
     },
-    "last_updated": "2026-11-25T09:20:00Z"
+    "last_updated": "2026-11-25T09:23:00Z"
   }
 }

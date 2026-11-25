@@ -26,3 +26,8 @@
 - D1 & Worker (P2): provisioned `football-predictor-db` (`b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d`) and deployed Worker `football-predictor` (`https://football-predictor.vjumbo264.workers.dev`). Predictions table enforces insert-only at both application level (`INSERT OR IGNORE`, pre-kickoff validation) and SQLite trigger level (`predictions_no_update`, `predictions_no_delete`). Grading table `prediction_results` is also append-only via triggers.
 - Daily job (P3): scheduled GitHub Actions workflow runs at 05:00 UTC using a 36-hour pre-kickoff window (`--window-hours 36`); `workflow_dispatch` accepts an optional `window_hours` input (used `72` on initial midweek verification to lock Friday's real Premier League fixture while keeping Saturday matches >72h away un-locked for provisional testing).
 - Close-match threshold: chosen `0.08` (8 percentage points between the top two 1X2 probabilities) for marking `"Close match, draw risk"`.
+
+## Fix Round 3
+- Swapped `TELEGRAM_BOT_TOKEN` to the new `@MotionsaltFootballBot` token in both GitHub Actions and Cloudflare Worker secrets, and added `ADMIN_TELEGRAM_IDS` secret.
+- Created `assets/avatar.png` (640x640 original geometric football + 1X2 probability bars) and `scripts/setup_bot_profile.mjs` (idempotent Bot API profile + command + webhook setup wired into `deploy-worker.yml`).
+- Verified `setMyProfilePhoto` succeeded via the Telegram Bot API directly (no manual `@BotFather` `/setuserpic` needed).
