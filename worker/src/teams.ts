@@ -117,3 +117,9 @@ export function splitMatchQuery(raw: string): { homeQuery: string; awayQuery: st
   }
   return { homeQuery: cleaned, awayQuery: null };
 }
+
+export function getCurrentPremierLeagueTeams(): TeamRecord[] {
+  return [...BUILTIN_TEAMS].sort((a, b) =>
+    (a.short_name ?? a.display_name).localeCompare(b.short_name ?? b.display_name),
+  );
+}

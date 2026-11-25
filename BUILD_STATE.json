@@ -267,32 +267,32 @@
       {
         "id": "K2",
         "title": "Main menu with inline buttons",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented /menu and returning /start inline Home Menu, callback_query routing with answerCallbackQuery, editMessageText in-place navigation, Back/Home buttons on every screen, non-allowed tap ignore, and sendMessage fallback on \"message is not modified\" and \"message to edit not found\". Verified by menus_callbacks.test.ts."
       },
       {
         "id": "K3",
         "title": "Match lists and match detail as buttons",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented paginated day views (8 matches/page, Next/Previous), Prev/Next day stepping in WAT, match button labels (\"17:30 Arsenal v Chelsea\"), and match detail view with Refresh, Back to list, and Home buttons. Verified by day_pagination_detail.test.ts (0, 1, 8, 10 matches)."
       },
       {
         "id": "K4",
         "title": "Find a match without typing",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented 20-team alphabetical 3-per-row short-name button grid in \"Find a match\", team detail view with next fixture prediction + last 5 results (including no-upcoming-fixture case), and preserved /match + plain-text alias resolution. Verified by team_grid.test.ts."
       },
       {
         "id": "K5",
         "title": "Quick-access keyboard and onboarding",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented persistent 4-button reply keyboard (Today, Live, Results, Menu) with text routing, plus plain-language 2-page first-time onboarding on /start (users.onboarded_at) and \"How to use\". Verified by onboarding_keyboard.test.ts."
       },
       {
         "id": "K6",
         "title": "Admin tools and approval flow",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Added D1 migration 0002_ux_and_admin.sql (allowed_users, access_requests, users.onboarded_at), merged allowlist with ALLOWED_TELEGRAM_IDS + ADMIN_TELEGRAM_IDS, /adduser /removeuser /users /pending, automatic admin notification with Approve/Decline buttons, 24h anti-spam throttling, decline silencing, and forged-callback rejection. Verified by admin_approval.test.ts."
       },
       {
         "id": "K7",
@@ -302,7 +302,9 @@
       }
     ],
     "decisions": [
-      "Bot profile photo set directly via Telegram Bot API setMyProfilePhoto using assets/avatar.png."
+      "Bot profile photo set directly via Telegram Bot API setMyProfilePhoto using assets/avatar.png.",
+      "Used fixtures.rowid in v1:md/v1:mt callback_data so all inline callback payloads stay well under Telegram 64-byte limit.",
+      "Sent quick-access ReplyKeyboardMarkup on /start and approval welcome before the inline Home/Onboarding message because Telegram sendMessage accepts one reply_markup per message."
     ],
     "known_issues": [],
     "deployment": {
@@ -324,6 +326,6 @@
         "WORKER_URL"
       ]
     },
-    "last_updated": "2026-11-25T09:23:00Z"
+    "last_updated": "2026-11-25T09:29:00Z"
   }
 }

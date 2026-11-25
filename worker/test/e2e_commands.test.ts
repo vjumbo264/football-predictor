@@ -55,8 +55,8 @@ async function simWebhook(
     },
   );
   assert.equal(res.status, 200);
-  assert.equal(sent.length, 1);
-  return sent[0].text;
+  assert.ok(sent.length >= 1);
+  return sent.map((m) => m.text).join('\n');
 }
 
 test('end-to-end chain: ingest -> all commands -> grading finished match -> results & performance', async () => {
@@ -138,8 +138,8 @@ test('end-to-end chain: ingest -> all commands -> grading finished match -> resu
   assert.equal(ingestRes.status, 200);
 
   // 2. Verify commands before kickoff
-  assert.match(await simWebhook(env, '/start', t0), /Premier League Match Predictor/);
-  assert.match(await simWebhook(env, '/help', t0), /\/performance/);
+  assert.match(await simWebhook(env, '/start', t0), /Welcome to Football Predictor/);
+  assert.match(await simWebhook(env, '/help', t0), /Close match, draw risk/);
   assert.match(await simWebhook(env, '/today', t0), /Brentford vs Everton<\/b> \(21:00 WAT\)/);
   assert.match(await simWebhook(env, '/tomorrow', t0), /No Premier League matches scheduled/);
   assert.match(await simWebhook(env, '/match Forest vs Chelsea', t0), /PROVISIONAL/);

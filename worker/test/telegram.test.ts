@@ -12,6 +12,7 @@ function makeEnv(d1: D1Database): Env {
     TELEGRAM_BOT_TOKEN: 'test-bot-token',
     TELEGRAM_WEBHOOK_SECRET: 'test-webhook-secret-xyz',
     ALLOWED_TELEGRAM_IDS: '6339561761',
+    ADMIN_TELEGRAM_IDS: '6339561761',
     FOOTBALL_API_KEY: 'test-api-key',
     API_DAILY_CAP: '80',
     LIVE_CACHE_SECONDS: '60',
@@ -34,11 +35,10 @@ test('webhook rejects missing or bad secret token with 403', async () => {
   assert.equal(res.status, 403);
 });
 
-test('unauthorized user gets numeric ID and cannot invoke commands', async () => {
+test('unapproved user gets friendly private notice, cannot invoke commands, and notifies admin once', async () => {
   const { d1 } = createTestDb();
   const env = makeEnv(d1);
   const sent: OutgoingMessage[] = [];
-
   const update = {
     update_id: 1001,
     message: {
@@ -48,7 +48,6 @@ test('unauthorized user gets numeric ID and cannot invoke commands', async () =>
       text: '/today',
     },
   };
-
   const res = await handleRequest(
     new Request('https://worker.test/telegram/webhook', {
       method: 'POST',
@@ -66,22 +65,20 @@ test('unauthorized user gets numeric ID and cannot invoke commands', async () =>
       },
     },
   );
-
   assert.equal(res.status, 200);
   const body = (await res.json()) as any;
   assert.equal(body.allowed, false);
-  assert.equal(sent.length, 1);
+  assert.equal(sent.length, 2);
   assert.equal(sent[0].chat_id, 999888777);
-  assert.equal(sent[0].parse_mode, 'HTML');
-  assert.match(sent[0].text, /999888777/);
-  assert.match(sent[0].text, /Access restricted/i);
+  assert.match(sent[0].text, /private/i);
+  assert.equal(sent[1].chat_id, '6339561761');
+  assert.match(sent[1].text, /999888777/);
 });
 
-test('allowed user gets /start and /help replies with honest accuracy note', async () => {
+test('allowed user gets /start onboarding + quick keyboard and /help screen', async () => {
   const { d1 } = createTestDb();
   const env = makeEnv(d1);
   const sent: OutgoingMessage[] = [];
-
   for (const cmd of ['/start', '/help']) {
     const res = await handleRequest(
       new Request('https://worker.test/telegram/webhook', {
@@ -110,10 +107,9 @@ test('allowed user gets /start and /help replies with honest accuracy note', asy
     );
     assert.equal(res.status, 200);
   }
-
-  assert.equal(sent.length, 2);
-  assert.equal(sent[0].parse_mode, 'HTML');
-  assert.match(sent[0].text, /50–55%/);
-  assert.match(sent[0].text, /\/today/);
-  assert.match(sent[0].text, /\/performance/);
+  assert.equal(sent.length, 3);
+  assert.ok(sent[0].reply_markup && 'keyboard' in sent[0].reply_markup);
+  assert.match(sent[1].text, /Welcome to Football Predictor/);
+  assert.match(sent[1].text, /lock before kickoff/i);
+  assert.match(sent[2].text, /Welcome to Football Predictor/);
 });
