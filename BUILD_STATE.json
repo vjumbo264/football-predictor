@@ -170,13 +170,13 @@
       {
         "id": "P1",
         "title": "Data source check and DATA_SOURCES.md",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Empirically verified API-Football free plan (3-day date window, no season=2026, live=all works), FPL API (380 fixtures, 0 unmapped teams), and football-data.co.uk 2627/E0.csv (110 matches, 0 unmapped teams). Added docs/DATA_SOURCES.md, jobs/config.py, jobs/teams.py, jobs/sources.py, and tests/test_sources.py (4/4 unit tests + live smoke pass)."
       },
       {
         "id": "P2",
         "title": "D1 schema and Worker skeleton",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -223,7 +223,9 @@
       }
     ],
     "decisions": [
-      "Created minimal host-frontend/index.html placeholder and redacted docs/PHASE2_PROMPT.md without credentials."
+      "Created minimal host-frontend/index.html placeholder and redacted docs/PHASE2_PROMPT.md without credentials.",
+      "Selected FPL API (0 quota) as primary 2026/27 schedule/results source, football-data.co.uk CSVs as training/fallback, and API-Football live=all (60s cache, 80/day budget) as primary live source with FPL fallback.",
+      "Canonical match_id uses league:season:home_slug:away_slug aligned with footpred.data.team_name()."
     ],
     "known_issues": [],
     "deployment": {
@@ -245,9 +247,9 @@
       ]
     },
     "next_steps": [
-      "P1: Empirically verify API-Football and fallback data sources for 2026/27 Premier League."
+      "P2: Create Cloudflare D1 schema/migrations, Worker skeleton (/health, /ingest), and deploy via wrangler + CI."
     ],
-    "last_updated": "2026-11-25T03:33:01Z",
-    "last_session_note": "Initialized Phase 2 state, host-frontend placeholder, and redacted PHASE2_PROMPT.md."
+    "last_updated": "2026-11-25T03:35:37Z",
+    "last_session_note": "Completed P1: empirical data source verification, DATA_SOURCES.md, swappable source adapters, and unit/smoke tests."
   }
 }

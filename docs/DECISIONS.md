@@ -17,3 +17,9 @@
 - The official holdout ran once under phase1-official-test-claimed without retuning. The eligible 2026/27 forward slice is separate, not included in the official metrics. Neither priced market met the validation-only betting activation rule, so the frozen strategy abstained on holdout.
 
 - Release report edit after scoring: repaired the betting-table layout and clarified the zero-ticket and forward-slice notes. No evaluation was rerun and no numbers changed.
+
+## Phase 2
+- Host placeholder: created minimal `host-frontend/index.html` and matched it in the host slot.
+- Redacted `docs/PHASE2_PROMPT.md` without credential values for public repo safety.
+- Data sources (P1): API-Football free plan blocks `season=2026`, `last=N`, and `date` outside `today ± 1 day`, while `live=all` and `date` within `today ± 1 day` work. Selected Fantasy Premier League official API (`fantasy.premierleague.com/api/bootstrap-static/` + `fixtures/`) as primary 2026/27 schedule & results source (0 quota cost, 380 fixtures), `football-data.co.uk` (`2627/E0.csv` + `fixtures.csv`) as training & fallback source, and API-Football `live=all` (cached 60s, 80/day cap) as primary live score source with FPL fallback.
+- Canonical match IDs: deterministic `league:season:home_slug:away_slug` (e.g. `E0:2026:nott-m-forest:chelsea`), matching `footpred.data.team_name()` canonical team keys so rescheduled kickoffs and cross-provider feeds never duplicate predictions.
