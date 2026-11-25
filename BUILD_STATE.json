@@ -194,13 +194,13 @@
       {
         "id": "P5",
         "title": "/today, /tomorrow, /match",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented /today, /tomorrow, and /match in worker/src/commands_schedule.ts, worker/src/teams.ts, and worker/src/provisional.ts with Africa/Lagos (WAT) formatting, close-match marker (gap <= 0.08), recent form & H2H, team aliasing/ambiguity/unknown handling, and non-stored >36h provisional forecasts. Verified 9/9 Worker tests."
       },
       {
         "id": "P6",
         "title": "/live and /results",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -250,9 +250,9 @@
       "bot_username": "ScripturaMotionsaltBot"
     },
     "next_steps": [
-      "P5: Implement /today, /tomorrow, and /match with Lagos time, team aliasing, close-match marker, form/H2H, and provisional >36h handling."
+      "P6: Implement /live (60s cache + 80/day budget guard + fallback) and /results (recent settled scores + hit/miss)."
     ],
-    "last_updated": "2026-11-25T03:43:50Z",
-    "last_session_note": "Completed P3 (daily predict + idempotent rerun verified on D1) and P4 (Telegram webhook active + allowlist + simulated tests)."
+    "last_updated": "2026-11-25T03:44:50Z",
+    "last_session_note": "Completed P5 (/today, /tomorrow, /match with Lagos time, team aliases, and provisional >36h handling)."
   }
 }

@@ -1,4 +1,5 @@
 import { verifyBearerToken, constantTimeEqual } from './auth';
+import { handleDayCommand, handleMatchCommand } from './commands_schedule';
 import { IngestValidationError, getApiUsage, ingestData, utcDateStr } from './db';
 import {
   createTelegramSender,
@@ -20,6 +21,12 @@ export interface RequestTestHooks {
   sender?: TelegramSender;
   deps?: CommandDependencies;
 }
+
+const DEFAULT_COMMAND_DEPS: CommandDependencies = {
+  onToday: (env, nowIso) => handleDayCommand(env, 0, nowIso),
+  onTomorrow: (env, nowIso) => handleDayCommand(env, 1, nowIso),
+  onMatch: (env, query, nowIso) => handleMatchCommand(env, query, nowIso),
+};
 
 export async function handleRequest(
   request: Request,
@@ -80,7 +87,8 @@ export async function handleRequest(
       return jsonResponse({ ok: false, error: 'Invalid Telegram update JSON' }, 400);
     }
     const sender = hooks.sender ?? createTelegramSender(env.TELEGRAM_BOT_TOKEN);
-    const result = await handleTelegramUpdate(update, env, sender, hooks.deps ?? {}, nowIso);
+    const deps: CommandDependencies = { ...DEFAULT_COMMAND_DEPS, ...hooks.deps };
+    const result = await handleTelegramUpdate(update, env, sender, deps, nowIso);
     return jsonResponse({ ok: true, ...result }, 200);
   }
 
