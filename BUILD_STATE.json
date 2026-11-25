@@ -117,8 +117,8 @@
     "F4"
   ],
   "next_steps": [],
-  "last_updated": "2026-11-23T17:52:54Z",
-  "last_session_note": "Round 2 completed: once-only historical holdout, no convincing betting edge, aggregate-only release published.",
+  "last_updated": "2026-11-25T03:48:48Z",
+  "last_session_note": "Completed P8: end-to-end verification, README, PHASE2_REPORT.md, and GitHub Release phase2-40.",
   "verification": {
     "ci_run": 45225733714,
     "smoke_run": 45225733575,
@@ -165,7 +165,7 @@
   },
   "phase_2": {
     "goal": "Phase 2 Premier League Telegram win/draw/loss prediction bot on Cloudflare Workers + D1 + GitHub Actions",
-    "status": "in_progress",
+    "status": "complete",
     "queue": [
       {
         "id": "P1",
@@ -212,8 +212,8 @@
       {
         "id": "P8",
         "title": "End-to-end verification and docs",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Verified full chain on real data: CI run 45542402975 (#40) and Deploy run 45542402972 (#7) green; daily-predict runs #1/#2 ingested 40 fixtures, 10 results, and 1 upcoming prediction idempotently; live /health (200), /grade (200), and getWebhookInfo active; 13/13 Worker tests pass including e2e_commands.test.ts; README.md and docs/PHASE2_REPORT.md published."
       },
       {
         "id": "P9",
@@ -236,7 +236,7 @@
       "d1_database_name": "football-predictor-db",
       "d1_database_id": "b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d",
       "webhook_status": "active",
-      "release_tag": null,
+      "release_tag": "phase2-40",
       "secrets_expected": [
         "CLOUDFLARE_API_TOKEN",
         "CLOUDFLARE_ACCOUNT_ID",
@@ -247,12 +247,13 @@
         "INGEST_SECRET",
         "FOOTBALL_DATA_CACHE_KEY"
       ],
-      "bot_username": "ScripturaMotionsaltBot"
+      "bot_username": "ScripturaMotionsaltBot",
+      "release_url": "https://github.com/vjumbo264/football-predictor/releases/tag/phase2-40"
     },
     "next_steps": [
-      "P8: Run full end-to-end verification on live Worker + D1, update README.md, write docs/PHASE2_REPORT.md, and publish GitHub Release."
+      "Optional P9: daily morning digest to allowed users."
     ],
-    "last_updated": "2026-11-25T03:46:53Z",
-    "last_session_note": "Completed P7 (idempotent grading cron and hand-verified /performance)."
+    "last_updated": "2026-11-25T03:48:48Z",
+    "last_session_note": "Completed P8: end-to-end verification, README, PHASE2_REPORT.md, and GitHub Release phase2-40."
   }
 }
