@@ -1,15 +1,85 @@
-# Football Predictor — Phase 1 Backtest Lab
+# Football Predictor (Premier League Win/Draw/Loss Bot)
 
-This repository compares league frequencies and de-margined bookmaker probabilities with Poisson, Dixon–Coles, Elo, recent form and a validation-weighted ensemble across five European leagues. Markets are 1X2, Over/Under 2.5 and calibration-only BTTS. Refits use only dates before the cutoff. See [build state](BUILD_STATE.json), [data quality](results/data_quality.md) and [design decisions](docs/DECISIONS.md).
+A private Telegram bot (`@ScripturaMotionsaltBot`) that delivers honest Premier League match outcome probabilities (Home Win / Draw / Away Win), live scores, settled results, and a transparent calibration & accuracy track record.
 
-## Private-use inputs, public aggregates
+- **Phase 1 (Backtest Lab):** Historical walk-forward evaluation (`footpred/`, `results/REPORT.md`, `results/frozen_config.json`, Release `phase1-real-6`). Established that the ensemble matches bookmaker-level calibration without beating the margin, so Phase 2 is strictly an honest probability viewer — **no odds, stakes, or betting tips**.
+- **Phase 2 (Production Bot):** Cloudflare Worker + Cloudflare D1 + GitHub Actions daily Python model refit & ingest.
 
-The historical CSVs are obtained from [Football-Data.co.uk](https://www.football-data.co.uk/downloadm.php) at run time for the authorized private individual, non-commercial use. Do not commit or upload raw input, normalized copies or per-match odds/prediction ledgers. The public repo, Actions artifacts and Releases hold only code, settings, aggregate results and plots. Tests use generated fixtures and do not require the source or any secret. No applet, deployment, or live service is used.
+---
 
-## GitHub Actions workflow
+## How It Works
 
-1. Open **Actions → Backtest Lab → Run workflow** on `main`. `smoke` runs synthetic tests only. `ingest` checks the authorized training downloads without model scoring. Check the private-use authorization box for all historical stages.
-2. `validate` restores or downloads the 2020/21–2023/24 snapshots, without fetching the holdout. The encrypted training archive is reused by `official`. Only the maintainer needs the `FOOTBALL_DATA_CACHE_KEY` repository secret; raw files are never put in the public cache in plaintext. If a league CSV endpoint fails, the workflow tries the publisher's alternate hostname and season ZIP, and records failures without printing odds. Cache refresh or key rotation requires changing the cache version; altered training bytes never pass the original freeze.
-3. Commit the reviewed validation artifact's `frozen_config.json`, `search_log.csv`, `betting_search_log.csv`, `validation_metrics.json` and `data_quality_validation.md` to `results/`. Any model-code or pinned dependency change invalidates that freeze.
-4. Run `official` with the exact 40-character freeze commit. Only then does the workflow fetch the 2024/25 and 2025/26 holdout and optionally 2026/27. It checks frozen input hashes and completeness before claiming a one-time tag. It runs the frozen evaluation and commits only allowlisted aggregates and plots. The optional forward slice is separate and requires 50 completed matches per league. Missing odds are not imputed.
-5. Run `publish` to release the existing aggregates without rescoring. Publication uses a unique `phase1-real-<run-number>` tag. Do not delete the lock or re-tune after seeing the official results; prominently document any correction and identify results that changed. See [Releases](https://github.com/vjumbo264/football-predictor/releases).
+1. **Daily Python Job (`.github/workflows/daily-predict.yml`, ~05:00 UTC + manual trigger):**
+   - Fetches and caches historical Premier League (`E0`) CSVs from `football-data.co.uk` (2020/21–2026/27, never committed) plus completed 2026/27 matches from the official Fantasy Premier League (FPL) API.
+   - Refits the Phase 1 frozen ensemble (`dixon_coles`, `elo`, `poisson`, `form` using `results/frozen_config.json`).
+   - Generates locked 1X2 probabilities for Premier League fixtures kicking off within the next **36 hours** that have no existing prediction yet, plus a 14-day schedule & team-strength snapshot.
+   - POSTs fixtures, recent results, and predictions to the Worker `/ingest` endpoint (`Authorization: Bearer <INGEST_SECRET>`).
+
+2. **Cloudflare Worker (`worker/` + Cloudflare D1 `football-predictor-db`):**
+   - **Prediction integrity:** `predictions` is strictly **insert-only** (enforced by pre-kickoff validation in `/ingest`, `UNIQUE(match_id, model_version)`, `INSERT OR IGNORE`, and SQLite `BEFORE UPDATE` / `BEFORE DELETE` triggers). Predictions for started matches are rejected with HTTP 400.
+   - **Telegram Webhook (`/telegram/webhook`):** Verifies `X-Telegram-Bot-Api-Secret-Token` and restricts access to numeric IDs in `ALLOWED_TELEGRAM_IDS`. Unlisted users receive their numeric ID.
+   - **Cron Grading (`*/20 * * * *`):** No-ops with zero external calls when no ungraded match is past kickoff + 105 minutes; otherwise fetches finished scores (FPL primary at 0 API-Football quota, API-Football date fallback), records `results`, and appends immutable `prediction_results` (hit/miss, Brier score, log loss).
+
+---
+
+## Bot Commands (Lagos Time, WAT / UTC+1)
+
+- `/start`, `/help` — Overview, command list, and honest accuracy note (top-flight 1X2 accuracy is ~50–55%).
+- `/today` — Today's Premier League matches in WAT, predicted outcome, 1X2 percentages, and close-match warning (`⚖️ Close match, draw risk` when top two outcomes are within 8 percentage points).
+- `/tomorrow` — Tomorrow's Premier League matches in WAT.
+- `/match <team>` or `/match <home> vs <away>` — Probabilities, expected goals, last-5 form, last-5 head-to-head, and one-line explanation. Supports nicknames (`Man U`, `Spurs`, `Forest`). Fixtures >36h away show an unstored `[PROVISIONAL]` estimate.
+- `/live` — Live Premier League scores & minutes paired with locked pre-match predictions (60s D1 cache, 80/day API-Football cap with FPL fallback).
+- `/results` — Recent finished matches with final score and ✅ Hit / ❌ Miss.
+- `/performance` — Overall, 7-day, and 30-day accuracy vs always-picking-home baseline, mean Brier score, mean log loss, and confidence calibration buckets.
+
+---
+
+## How to Rerun or Deploy
+
+- **Trigger daily predictions manually:** GitHub Actions → **Daily Premier League Predictions** → **Run workflow** (optional `window_hours` input, default `36`).
+- **Deploy Worker manually:** GitHub Actions → **Deploy Cloudflare Worker** → **Run workflow**, or locally from `worker/`:
+  ```bash
+  npm ci && npm run typecheck && npm test
+  npx wrangler d1 migrations apply football-predictor-db --remote
+  npx wrangler deploy
+  ```
+- **Run tests locally:**
+  - Python: `python -m pytest -q`
+  - Worker: `cd worker && npm test`
+
+---
+
+## Secrets Reference (Names Only)
+
+Configure these as **GitHub Actions secrets** and/or **Cloudflare Worker secrets** (`wrangler secret put`):
+
+- `CLOUDFLARE_API_TOKEN` (GitHub Actions)
+- `CLOUDFLARE_ACCOUNT_ID` (GitHub Actions)
+- `WORKER_URL` (GitHub Actions)
+- `INGEST_SECRET` (GitHub Actions + Worker)
+- `TELEGRAM_BOT_TOKEN` (GitHub Actions + Worker)
+- `TELEGRAM_WEBHOOK_SECRET` (GitHub Actions + Worker)
+- `ALLOWED_TELEGRAM_IDS` (GitHub Actions/reference + Worker)
+- `FOOTBALL_API_KEY` (Worker)
+- `FOOTBALL_DATA_CACHE_KEY` (Phase 1 Actions cache)
+
+---
+
+## Adding a User to `ALLOWED_TELEGRAM_IDS`
+
+1. Have the user message the bot once — it replies with their numeric Telegram ID (e.g. `123456789`).
+2. Update the `ALLOWED_TELEGRAM_IDS` secret as a comma-separated list (e.g. `6339561761,123456789`) on the Cloudflare Worker:
+   ```bash
+   cd worker
+   npx wrangler secret put ALLOWED_TELEGRAM_IDS
+   ```
+   (And update the `ALLOWED_TELEGRAM_IDS` GitHub Actions secret for consistency.)
+
+---
+
+## Adding Another League Later
+
+1. Add a `LeagueConfig` entry in `jobs/config.py` (e.g. `'SP1'` for La Liga with `api_football_id=140`, `fpl_enabled=False`, `timezone='Africa/Lagos'`).
+2. Add club aliases/display names for that league in `jobs/teams.py` and `worker/src/teams.ts`.
+3. Run `python -m jobs.predict_and_ingest --league SP1` (or extend the matrix in `.github/workflows/daily-predict.yml`).
+4. Parameterize `DEFAULT_LEAGUE` or pass a league filter in the Worker D1 queries (all tables already store `league`).
