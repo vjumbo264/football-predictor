@@ -176,13 +176,13 @@
       {
         "id": "P2",
         "title": "D1 schema and Worker skeleton",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Created D1 migration 0001_initial.sql (all 8 tables + live_cache + insert-only/append-only triggers), Worker (/health, /ingest), 5/5 SQLite-backed unit tests, CI + deploy workflows, provisioned football-predictor-db, deployed to https://football-predictor.vjumbo264.workers.dev, and verified live /health (200), bad-auth /ingest (401), and started-match /ingest (400)."
       },
       {
         "id": "P3",
         "title": "Daily prediction job (Python)",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -225,14 +225,15 @@
     "decisions": [
       "Created minimal host-frontend/index.html placeholder and redacted docs/PHASE2_PROMPT.md without credentials.",
       "Selected FPL API (0 quota) as primary 2026/27 schedule/results source, football-data.co.uk CSVs as training/fallback, and API-Football live=all (60s cache, 80/day budget) as primary live source with FPL fallback.",
-      "Canonical match_id uses league:season:home_slug:away_slug aligned with footpred.data.team_name()."
+      "Canonical match_id uses league:season:home_slug:away_slug aligned with footpred.data.team_name().",
+      "Enforced insert-only predictions and append-only prediction_results using SQLite triggers in addition to pre-kickoff ingest validation."
     ],
     "known_issues": [],
     "deployment": {
-      "worker_name": null,
-      "worker_url": null,
-      "d1_database_name": null,
-      "d1_database_id": null,
+      "worker_name": "football-predictor",
+      "worker_url": "https://football-predictor.vjumbo264.workers.dev",
+      "d1_database_name": "football-predictor-db",
+      "d1_database_id": "b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d",
       "webhook_status": "not_configured",
       "release_tag": null,
       "secrets_expected": [
@@ -247,9 +248,9 @@
       ]
     },
     "next_steps": [
-      "P2: Create Cloudflare D1 schema/migrations, Worker skeleton (/health, /ingest), and deploy via wrangler + CI."
+      "P3: Implement Python daily prediction & ingest job reusing footpred and frozen_config.json, plus scheduled GitHub Actions workflow."
     ],
-    "last_updated": "2026-11-25T03:35:37Z",
-    "last_session_note": "Completed P1: empirical data source verification, DATA_SOURCES.md, swappable source adapters, and unit/smoke tests."
+    "last_updated": "2026-11-25T03:39:16Z",
+    "last_session_note": "Completed P2: D1 schema, Worker deployed, secrets configured, live endpoints verified."
   }
 }

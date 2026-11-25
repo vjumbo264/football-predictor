@@ -11,3 +11,6 @@ data/processed/
 **/predictions_*.csv
 **/predictions_*.meta.json
 results/local/
+worker/node_modules/
+worker/.wrangler/
+worker/dist/

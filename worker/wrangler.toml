@@ -1,0 +1,19 @@
+name = "football-predictor"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "football-predictor-db"
+database_id = "b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d"
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["*/20 * * * *"]
+
+[vars]
+API_DAILY_CAP = "80"
+LIVE_CACHE_SECONDS = "60"
+CLOSE_MATCH_GAP = "0.08"
+DEFAULT_LEAGUE = "E0"
