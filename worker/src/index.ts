@@ -1,3 +1,4 @@
+import { runMorningDigest } from './morning';
 import { verifyBearerToken, constantTimeEqual } from './auth';
 import { handleLiveCommand, handleResultsCommand } from './commands_live_results';
 import { handleDayCommand, handleMatchCommand } from './commands_schedule';
@@ -120,6 +121,8 @@ export default {
     return handleRequest(request, env);
   },
   async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
-    await runGradingPass(env);
+    const nowIso = new Date().toISOString();
+    await runGradingPass(env, nowIso);
+    await runMorningDigest(env, nowIso);
   },
 };

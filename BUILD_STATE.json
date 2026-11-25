@@ -117,8 +117,8 @@
     "F4"
   ],
   "next_steps": [],
-  "last_updated": "2026-11-25T03:48:48Z",
-  "last_session_note": "Completed P8: end-to-end verification, README, PHASE2_REPORT.md, and GitHub Release phase2-40.",
+  "last_updated": "2026-11-25T03:49:19Z",
+  "last_session_note": "Completed P1 through P9: Premier League Telegram bot live on Cloudflare Workers + D1, CI green, Release phase2-40 published.",
   "verification": {
     "ci_run": 45225733714,
     "smoke_run": 45225733575,
@@ -218,8 +218,8 @@
       {
         "id": "P9",
         "title": "Optional daily morning message",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented optional daily morning digest (worker/src/morning.ts) in scheduled() cron after 08:00 WAT on matchdays, deduplicated per user per Lagos date via users.last_morning_date. Verified by morning_digest.test.ts (14/14 Worker tests pass)."
       }
     ],
     "decisions": [
@@ -250,10 +250,8 @@
       "bot_username": "ScripturaMotionsaltBot",
       "release_url": "https://github.com/vjumbo264/football-predictor/releases/tag/phase2-40"
     },
-    "next_steps": [
-      "Optional P9: daily morning digest to allowed users."
-    ],
-    "last_updated": "2026-11-25T03:48:48Z",
-    "last_session_note": "Completed P8: end-to-end verification, README, PHASE2_REPORT.md, and GitHub Release phase2-40."
+    "next_steps": [],
+    "last_updated": "2026-11-25T03:49:19Z",
+    "last_session_note": "Completed P1 through P9: Premier League Telegram bot live on Cloudflare Workers + D1, CI green, Release phase2-40 published."
   }
 }
