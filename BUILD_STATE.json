@@ -206,13 +206,13 @@
       {
         "id": "P7",
         "title": "Result grading and /performance",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented worker/src/grading.ts (cheap no-op cron when no match is due, idempotent append-only prediction_results grading, Brier score + log loss, and /performance with 7d/30d/overall accuracy vs always-home baseline and confidence calibration buckets) + authenticated POST /grade trigger. Verified 12/12 Worker tests including hand-computed /performance metrics."
       },
       {
         "id": "P8",
         "title": "End-to-end verification and docs",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -250,9 +250,9 @@
       "bot_username": "ScripturaMotionsaltBot"
     },
     "next_steps": [
-      "P7: Implement Worker cron grading (idempotent, append-only prediction_results) and /performance command."
+      "P8: Run full end-to-end verification on live Worker + D1, update README.md, write docs/PHASE2_REPORT.md, and publish GitHub Release."
     ],
-    "last_updated": "2026-11-25T03:45:55Z",
-    "last_session_note": "Completed P6 (/live with 60s cache + 80/day budget fallback, and /results)."
+    "last_updated": "2026-11-25T03:46:53Z",
+    "last_session_note": "Completed P7 (idempotent grading cron and hand-verified /performance)."
   }
 }

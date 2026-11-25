@@ -2,6 +2,7 @@ import { verifyBearerToken, constantTimeEqual } from './auth';
 import { handleLiveCommand, handleResultsCommand } from './commands_live_results';
 import { handleDayCommand, handleMatchCommand } from './commands_schedule';
 import { IngestValidationError, getApiUsage, ingestData, utcDateStr } from './db';
+import { handlePerformanceCommand, runGradingPass } from './grading';
 import type { FetchLike } from './sources';
 import {
   createTelegramSender,
@@ -32,6 +33,7 @@ export function buildCommandDeps(fetchFn: FetchLike = fetch): CommandDependencie
     onMatch: (env, query, nowIso) => handleMatchCommand(env, query, nowIso),
     onLive: (env, nowIso) => handleLiveCommand(env, nowIso, fetchFn),
     onResults: (env, nowIso) => handleResultsCommand(env, nowIso),
+    onPerformance: (env, nowIso) => handlePerformanceCommand(env, nowIso),
   };
 }
 
@@ -82,6 +84,14 @@ export async function handleRequest(
     }
   }
 
+  if (request.method === 'POST' && url.pathname === '/grade') {
+    if (!verifyBearerToken(request.headers.get('Authorization'), env.INGEST_SECRET)) {
+      return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
+    }
+    const summary = await runGradingPass(env, nowIso, hooks.fetchFn ?? fetch);
+    return jsonResponse({ ok: true, summary }, 200);
+  }
+
   if (request.method === 'POST' && url.pathname === '/telegram/webhook') {
     const headerSecret = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
     if (!constantTimeEqual(headerSecret, env.TELEGRAM_WEBHOOK_SECRET)) {
@@ -109,7 +119,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     return handleRequest(request, env);
   },
-  async scheduled(_event: ScheduledEvent, _env: Env): Promise<void> {
-    // Grading cron implemented in P7.
+  async scheduled(_event: ScheduledEvent, env: Env): Promise<void> {
+    await runGradingPass(env);
   },
 };
