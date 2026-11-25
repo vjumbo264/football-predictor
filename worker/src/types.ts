@@ -4,6 +4,7 @@ export interface Env {
   TELEGRAM_BOT_TOKEN: string;
   TELEGRAM_WEBHOOK_SECRET: string;
   ALLOWED_TELEGRAM_IDS: string;
+  ADMIN_TELEGRAM_IDS?: string;
   FOOTBALL_API_KEY: string;
   API_DAILY_CAP?: string;
   LIVE_CACHE_SECONDS?: string;

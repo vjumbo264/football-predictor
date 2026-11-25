@@ -1,4 +1,4 @@
-import { parseAllowedIds } from './auth';
+import { getAllAllowedUserIds } from './auth';
 import { handleDayCommand, lagosDateStr } from './commands_schedule';
 import { createTelegramSender, type TelegramSender } from './telegram';
 import type { Env } from './types';
@@ -19,7 +19,6 @@ export async function runMorningDigest(
 
   const league = env.DEFAULT_LEAGUE ?? 'E0';
   const todayWat = lagosDateStr(nowIso);
-
   const { results: fixtures } = await env.DB
     .prepare('SELECT kickoff_utc FROM fixtures WHERE league = ?')
     .bind(league)
@@ -30,7 +29,7 @@ export async function runMorningDigest(
     return { sent: 0, skipped: 0, reason: 'no_matches_today' };
   }
 
-  const allowedIds = Array.from(parseAllowedIds(env.ALLOWED_TELEGRAM_IDS));
+  const allowedIds = await getAllAllowedUserIds(env);
   if (!allowedIds.length) {
     return { sent: 0, skipped: 0, reason: 'no_allowed_users' };
   }
