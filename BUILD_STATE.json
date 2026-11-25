@@ -182,19 +182,19 @@
       {
         "id": "P3",
         "title": "Daily prediction job (Python)",
-        "status": "in_progress",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented jobs/predict_and_ingest.py reusing footpred models and frozen_config.json, tests/test_predict_job.py, and .github/workflows/daily-predict.yml. Manual workflow_dispatch run 45541675682 ingested 40 fixtures, 10 results, and 1 real upcoming prediction (E0:2026:nott-m-forest:chelsea) into D1; rerun 45541783538 kept predictions count at 1 with unchanged created_at."
       },
       {
         "id": "P4",
         "title": "Telegram webhook and access control",
-        "status": "pending",
-        "notes": ""
+        "status": "done",
+        "notes": "Implemented webhook secret-token verification, ALLOWED_TELEGRAM_IDS allowlist + users table upsert, /start and /help HTML replies, setWebhook automation in deploy-worker.yml, and 3 simulated-update tests (8/8 Worker tests pass). Verified getWebhookInfo points to https://football-predictor.vjumbo264.workers.dev/telegram/webhook and live bad-secret returns 403."
       },
       {
         "id": "P5",
         "title": "/today, /tomorrow, /match",
-        "status": "pending",
+        "status": "in_progress",
         "notes": ""
       },
       {
@@ -226,7 +226,8 @@
       "Created minimal host-frontend/index.html placeholder and redacted docs/PHASE2_PROMPT.md without credentials.",
       "Selected FPL API (0 quota) as primary 2026/27 schedule/results source, football-data.co.uk CSVs as training/fallback, and API-Football live=all (60s cache, 80/day budget) as primary live source with FPL fallback.",
       "Canonical match_id uses league:season:home_slug:away_slug aligned with footpred.data.team_name().",
-      "Enforced insert-only predictions and append-only prediction_results using SQLite triggers in addition to pre-kickoff ingest validation."
+      "Enforced insert-only predictions and append-only prediction_results using SQLite triggers in addition to pre-kickoff ingest validation.",
+      "Close-match threshold set to 0.08 (8 percentage points between top two 1X2 probabilities)."
     ],
     "known_issues": [],
     "deployment": {
@@ -234,7 +235,7 @@
       "worker_url": "https://football-predictor.vjumbo264.workers.dev",
       "d1_database_name": "football-predictor-db",
       "d1_database_id": "b58e8adf-3ed5-4b3f-bc1f-2336ad1b7e4d",
-      "webhook_status": "not_configured",
+      "webhook_status": "active",
       "release_tag": null,
       "secrets_expected": [
         "CLOUDFLARE_API_TOKEN",
@@ -245,12 +246,13 @@
         "ALLOWED_TELEGRAM_IDS",
         "INGEST_SECRET",
         "FOOTBALL_DATA_CACHE_KEY"
-      ]
+      ],
+      "bot_username": "ScripturaMotionsaltBot"
     },
     "next_steps": [
-      "P3: Implement Python daily prediction & ingest job reusing footpred and frozen_config.json, plus scheduled GitHub Actions workflow."
+      "P5: Implement /today, /tomorrow, and /match with Lagos time, team aliasing, close-match marker, form/H2H, and provisional >36h handling."
     ],
-    "last_updated": "2026-11-25T03:39:16Z",
-    "last_session_note": "Completed P2: D1 schema, Worker deployed, secrets configured, live endpoints verified."
+    "last_updated": "2026-11-25T03:43:50Z",
+    "last_session_note": "Completed P3 (daily predict + idempotent rerun verified on D1) and P4 (Telegram webhook active + allowlist + simulated tests)."
   }
 }

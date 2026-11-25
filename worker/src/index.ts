@@ -1,5 +1,12 @@
 import { verifyBearerToken, constantTimeEqual } from './auth';
 import { IngestValidationError, getApiUsage, ingestData, utcDateStr } from './db';
+import {
+  createTelegramSender,
+  handleTelegramUpdate,
+  type CommandDependencies,
+  type TelegramSender,
+  type TelegramUpdate,
+} from './telegram';
 import type { Env, IngestPayload } from './types';
 
 function jsonResponse(data: unknown, status = 200): Response {
@@ -9,10 +16,16 @@ function jsonResponse(data: unknown, status = 200): Response {
   });
 }
 
+export interface RequestTestHooks {
+  sender?: TelegramSender;
+  deps?: CommandDependencies;
+}
+
 export async function handleRequest(
   request: Request,
   env: Env,
   nowIso: string = new Date().toISOString(),
+  hooks: RequestTestHooks = {},
 ): Promise<Response> {
   const url = new URL(request.url);
 
@@ -60,7 +73,15 @@ export async function handleRequest(
     if (!constantTimeEqual(headerSecret, env.TELEGRAM_WEBHOOK_SECRET)) {
       return jsonResponse({ ok: false, error: 'Forbidden' }, 403);
     }
-    return jsonResponse({ ok: true, note: 'Webhook skeleton active' }, 200);
+    let update: TelegramUpdate;
+    try {
+      update = (await request.json()) as TelegramUpdate;
+    } catch {
+      return jsonResponse({ ok: false, error: 'Invalid Telegram update JSON' }, 400);
+    }
+    const sender = hooks.sender ?? createTelegramSender(env.TELEGRAM_BOT_TOKEN);
+    const result = await handleTelegramUpdate(update, env, sender, hooks.deps ?? {}, nowIso);
+    return jsonResponse({ ok: true, ...result }, 200);
   }
 
   return jsonResponse({ ok: false, error: 'Not found' }, 404);
