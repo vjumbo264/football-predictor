@@ -66,10 +66,20 @@ export interface IngestResult {
   source: string;
 }
 
+export interface TeamStrengthSnapshot {
+  league: string;
+  generated_at: string;
+  base: number;
+  home_adv: number;
+  rho: number;
+  teams: Record<string, { attack: number; defence: number; elo: number }>;
+}
+
 export interface IngestPayload {
   model_version?: IngestModelVersion;
   teams?: IngestTeam[];
   fixtures?: IngestFixture[];
   predictions?: IngestPrediction[];
   results?: IngestResult[];
+  team_strengths?: TeamStrengthSnapshot;
 }

@@ -308,5 +308,15 @@ export async function ingestData(
     }
   }
 
+  if (payload.team_strengths?.league) {
+    await setCachedValue(
+      db,
+      `team_strengths:${payload.team_strengths.league}`,
+      payload.team_strengths,
+      7 * 24 * 3600,
+      nowIso,
+    );
+  }
+
   return summary;
 }
